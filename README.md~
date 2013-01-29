@@ -1,0 +1,16 @@
+<<<<<<< HEAD
+fragaria-adapter-rewrite
+========================
+
+Fragaria est un framework de dévelopement web visant à associer autour de Tapestry un ensemble de service préintégré
+
+Ce repo contient les sources de la première ébauche pour une couche d'abstraction sur les sources de données
+
+
+Ce code n'est pas à utiliser en production, il est au stade de la réflexion.
+=======
+fragaria-reflection
+===================
+
+Module Tapestry pour la reflection, utilisé dans le cadre de fragaria
+>>>>>>> branch 'master' of https://github.com/JMaltat/fragaria-reflection.git
