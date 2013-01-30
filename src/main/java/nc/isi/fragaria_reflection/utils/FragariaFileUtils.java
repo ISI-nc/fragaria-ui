@@ -1,7 +1,7 @@
 package nc.isi.fragaria_reflection.utils;
 
-public final class FileUtils {
-	private FileUtils() {
+public final class FragariaFileUtils {
+	private FragariaFileUtils() {
 	}
 
 	public static String removeExtension(String fileName) {
