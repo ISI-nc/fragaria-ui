@@ -1,10 +1,11 @@
-<<<<<<< HEAD
+
+
 /target
-=======
 *.class
+# temp files #
+*~
 
 # Package Files #
 *.jar
 *.war
 *.ear
->>>>>>> branch 'master' of https://github.com/JMaltat/fragaria-reflection.git
