@@ -6,7 +6,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import nc.isi.fragaria_reflection.exceptions.MultipleAnnotationDefinitionException;
@@ -84,10 +83,7 @@ public final class ReflectionUtils {
 	 * @return
 	 */
 	public static <T extends Annotation> T getPropertyAnnotation(
-			Class<?> clazz, Class<T> annotation, String key, boolean recursive) {
-		if (recursive) {
-			return getPropertyAnnotation(clazz, annotation, key);
-		}
+			Class<?> clazz, Class<T> annotation, String key) {
 		T fieldAnnotation = null;
 		for (Field field : clazz.getDeclaredFields()) {
 			if (field.getName().equals(key)) {
@@ -95,28 +91,21 @@ public final class ReflectionUtils {
 				break;
 			}
 		}
-		T methodAnnotation = null;
-		try {
-			if (propertyExists(clazz, key)) {
-				methodAnnotation = clazz
-						.getMethod(fieldToGetMethod(clazz, key)).getAnnotation(
-								annotation);
-			}
-		} catch (NoSuchMethodException | SecurityException e) {
-			methodAnnotation = null;
-		}
-		if (fieldAnnotation != null && methodAnnotation != null) {
+		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(clazz,
+				key);
+		T readMethodAnnotation = propertyDescriptor.getReadMethod() != null ? propertyDescriptor
+				.getReadMethod().getAnnotation(annotation) : null;
+		T writeMethodAnnotation = propertyDescriptor.getWriteMethod() != null ? propertyDescriptor
+				.getWriteMethod().getAnnotation(annotation) : null;
+		if ((fieldAnnotation != null && readMethodAnnotation != null)
+				|| (fieldAnnotation != null && writeMethodAnnotation != null)
+				|| (readMethodAnnotation != null && writeMethodAnnotation != null)) {
 			throw new MultipleAnnotationDefinitionException();
 		}
-		return methodAnnotation != null ? methodAnnotation : fieldAnnotation;
+		return readMethodAnnotation != null ? readMethodAnnotation
+				: fieldAnnotation != null ? fieldAnnotation
+						: writeMethodAnnotation;
 
-	}
-
-	private static String fieldToGetMethod(Class<?> clazz, String key) {
-		PropertyDescriptor propertyDescriptor = BeanUtils
-				.getPropertyDescriptor(clazz, key);
-		Method method = propertyDescriptor.getReadMethod();
-		return method != null ? method.getName() : "";
 	}
 
 	/**
@@ -129,30 +118,21 @@ public final class ReflectionUtils {
 	 * @param key
 	 * @return
 	 */
-	public static <T extends Annotation> T getPropertyAnnotation(
-			Class<?> clazz, Class<T> annotation, String key) {
-		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(clazz,
-				key);
-		T propertyAnnotation = propertyDescriptor.getReadMethod() != null ? propertyDescriptor
-				.getReadMethod().getAnnotation(annotation) : null;
-		T fieldAnnotation = null;
+	public static <T extends Annotation> T getRecursivePropertyAnnotation(
+			Class<?> clazz, Class<T> annotationClass, String key) {
 		for (Class<?> tempClazz = clazz; Object.class
 				.isAssignableFrom(tempClazz) && !tempClazz.equals(Object.class); tempClazz = tempClazz
 				.getSuperclass()) {
-			for (Field field : tempClazz.getDeclaredFields()) {
-				if (field.getName().equals(key)) {
-					fieldAnnotation = field.getAnnotation(annotation);
-					if (fieldAnnotation != null) {
-						break;
-					}
-				}
+			try {
+				T annotation = getPropertyAnnotation(tempClazz,
+						annotationClass, key);
+				if (annotation != null)
+					return annotation;
+			} catch (IllegalArgumentException e) {
+				break;
 			}
 		}
-		if (fieldAnnotation != null && propertyAnnotation != null) {
-			throw new MultipleAnnotationDefinitionException();
-		}
-		return propertyAnnotation != null ? propertyAnnotation
-				: fieldAnnotation;
+		return null;
 
 	}
 
