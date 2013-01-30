@@ -2,6 +2,8 @@
 
 /target
 *.class
+# temp files #
+*~
 
 # Package Files #
 *.jar
