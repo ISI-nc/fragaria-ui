@@ -1,4 +1,4 @@
-fragaria-reflection
-===================
+fragaria-ui
+===========
 
-Module Tapestry pour la reflection, utilisé dans le cadre de fragaria
+Tapestry fragaria components
