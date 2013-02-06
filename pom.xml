@@ -3,23 +3,37 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nc.isi</groupId>
-	<artifactId>fragaria-reflection</artifactId>
+	<artifactId>fragaria-ui</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>fragaria-reflection</name>
+	<name>fragaria-ui</name>
 	<dependencies>
 		<!-- Too set up an application with a database, change the artifactId below 
 			to tapestry-hibernate, and add a dependency on your JDBC driver. You'll also 
 			need to add Hibernate configuration files, such as hibernate.cfg.xml. -->
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-ioc</artifactId>
+			<artifactId>tapestry-core</artifactId>
 			<version>${tapestry-release-version}</version>
 		</dependency>
 
-		<!-- Uncomment this to add support for file uploads: <dependency> <groupId>org.apache.tapestry</groupId> 
-			<artifactId>tapestry-upload</artifactId> <version>${tapestry-release-version}</version> 
-			</dependency> -->
+		<!-- This adds automatic compression of JavaScript and CSS when in production 
+			mode. -->
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-yuicompressor</artifactId>
+			<version>${tapestry-release-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-upload</artifactId>
+			<version>${tapestry-release-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-beanvalidator</artifactId>
+			<version>${tapestry-release-version}</version>
+		</dependency>
 
 		<!-- A dependency on either JUnit or TestNG is required, or the surefire 
 			plugin (which runs the tests) will fail, preventing Maven from packaging 
@@ -39,26 +53,15 @@
 			<version>${tapestry-release-version}</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>14.0-rc1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>3.2.0.RELEASE</version>
+			<groupId>nc.isi</groupId>
+			<artifactId>fragaria-adapter-rewrite</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
 	<build>
-		<finalName>fragaria-reflection</finalName>
+		<finalName>fragaria-ui</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>

@@ -1,12 +1,11 @@
 <<<<<<< HEAD
-
 fragaria-reflection
 ===================
 
 Module Tapestry pour la reflection, utilisé dans le cadre de fragaria
 =======
-fragaria-reflection
-===================
+fragaria-ui
+===========
 
-Module Tapestry pour la reflection, utilisé dans le cadre de fragaria
->>>>>>> 8def442091858aacfce2aa1916734a0f70ee6d5a
+Tapestry fragaria components
+>>>>>>> 160a2b0124d082c76f81b9dcfec8783bf16a3697

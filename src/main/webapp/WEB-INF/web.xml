@@ -18,13 +18,13 @@ of where to look for pages, components and mixins. -->
     <context-param>
         <param-name>tapestry.development-modules</param-name>
         <param-value>
-            nc.isi.fragaria_reflection.services.DevelopmentModule
+            nc.isi.fragaria_ui.services.DevelopmentModule
         </param-value>
     </context-param>
     <context-param>
         <param-name>tapestry.qa-modules</param-name>
         <param-value>
-            nc.isi.fragaria_reflection.services.QaModule
+            nc.isi.fragaria_ui.services.QaModule
         </param-value>
     </context-param>
     <filter>

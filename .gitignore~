@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 
 
 /target
 *.class
 # temp files #
-*~
+*.*~
+=======
+*.class
+>>>>>>> 160a2b0124d082c76f81b9dcfec8783bf16a3697
 
 # Package Files #
 *.jar
