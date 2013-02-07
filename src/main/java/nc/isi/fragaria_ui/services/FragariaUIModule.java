@@ -8,9 +8,11 @@ import nc.isi.fragaria_adapter_rewrite.services.FragariaDomainModule;
 import nc.isi.fragaria_reflection.services.ReflectionProvider;
 
 import org.apache.tapestry5.ValueEncoder;
+import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.services.LibraryMapping;
 import org.apache.tapestry5.services.ValueEncoderFactory;
 import org.reflections.Reflections;
 
@@ -43,6 +45,11 @@ public class FragariaUIModule {
 			configuration.add(entityClass, valueEncoderFactory);
 		}
 
+	}
+
+	public static void contributeComponentClassResolver(
+			Configuration<LibraryMapping> configuration) {
+		configuration.add(new LibraryMapping("fragaria", "nc.isi.fragaria_ui"));
 	}
 
 }
