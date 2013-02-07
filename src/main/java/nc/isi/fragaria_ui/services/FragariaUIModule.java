@@ -1,19 +1,28 @@
 package nc.isi.fragaria_ui.services;
 
+import java.math.BigDecimal;
+
 import nc.isi.fragaria_adapter_rewrite.dao.Session;
 import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_adapter_rewrite.entities.Entity;
 import nc.isi.fragaria_adapter_rewrite.services.FragariaDomainModule;
 import nc.isi.fragaria_reflection.services.ReflectionProvider;
+import nc.isi.fragaria_ui.utils.JodaTimeUtil;
 
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.ioc.services.Coercion;
+import org.apache.tapestry5.ioc.services.CoercionTuple;
+import org.apache.tapestry5.services.BeanBlockContribution;
+import org.apache.tapestry5.services.DisplayBlockContribution;
+import org.apache.tapestry5.services.EditBlockContribution;
 import org.apache.tapestry5.services.LibraryMapping;
 import org.apache.tapestry5.services.ValueEncoderFactory;
+import org.joda.time.DateTime;
 import org.reflections.Reflections;
 
 @SubModule(FragariaDomainModule.class)
@@ -50,6 +59,47 @@ public class FragariaUIModule {
 	public static void contributeComponentClassResolver(
 			Configuration<LibraryMapping> configuration) {
 		configuration.add(new LibraryMapping("fragaria", "nc.isi.fragaria_ui"));
+	}
+
+	public static void contributeDefaultDataTypeAnalyzer(
+			@SuppressWarnings("rawtypes") MappedConfiguration<Class, String> configuration) {
+		configuration.add(DateTime.class, "dateTime");
+		configuration.add(BigDecimal.class, "bigDecimal");
+	}
+
+	public static void contributeBeanBlockSource(
+			Configuration<BeanBlockContribution> configuration) {
+		configuration.add(new DisplayBlockContribution("dateTime",
+				"fragaria/JodaTimeDisplayBlocks", "dateTime"));
+		configuration.add(new EditBlockContribution("dateTime",
+				"fragaria/JodaTimePropertyEditBlocks", "dateTime"));
+		configuration.add(new DisplayBlockContribution("bigDecimal",
+				"fragaria/BigDecimalPropertyDisplayBlocks", "bigDecimal"));
+		configuration.add(new EditBlockContribution("bigDecimal",
+				"fragaria/BigDecimalPropertyEditBlocks", "bigDecimal"));
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static void contributeTypeCoercer(
+			Configuration<CoercionTuple> configuration) {
+
+		Coercion<java.util.Date, DateTime> toDateTime = new Coercion<java.util.Date, DateTime>() {
+			public DateTime coerce(java.util.Date input) {
+				return JodaTimeUtil.toDateTime(input);
+			}
+		};
+
+		configuration.add(new CoercionTuple<java.util.Date, DateTime>(
+				java.util.Date.class, DateTime.class, toDateTime));
+
+		Coercion<DateTime, java.util.Date> fromDateTime = new Coercion<DateTime, java.util.Date>() {
+			public java.util.Date coerce(DateTime input) {
+				return JodaTimeUtil.toJavaDate(input);
+			}
+		};
+
+		configuration.add(new CoercionTuple<DateTime, java.util.Date>(
+				DateTime.class, java.util.Date.class, fromDateTime));
 	}
 
 }

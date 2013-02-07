@@ -1,0 +1,7 @@
+<t:container xml:space="default"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+
+	<t:block id="bigDecimal">
+		<t:output t:id="bigDecimalOutput" value="context.propertyValue" format="decimalFormat" />
+	</t:block>
+</t:container>
