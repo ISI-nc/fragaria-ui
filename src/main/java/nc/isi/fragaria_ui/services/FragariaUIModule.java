@@ -10,18 +10,24 @@ import nc.isi.fragaria_adapter_rewrite.services.FragariaDomainModule;
 import nc.isi.fragaria_reflection.services.ReflectionProvider;
 import nc.isi.fragaria_ui.utils.JodaTimeUtil;
 
+import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.Coercion;
 import org.apache.tapestry5.ioc.services.CoercionTuple;
+import org.apache.tapestry5.ioc.services.SymbolProvider;
 import org.apache.tapestry5.services.BeanBlockContribution;
 import org.apache.tapestry5.services.DisplayBlockContribution;
 import org.apache.tapestry5.services.EditBlockContribution;
 import org.apache.tapestry5.services.LibraryMapping;
 import org.apache.tapestry5.services.ValueEncoderFactory;
+import org.apache.tapestry5.services.compatibility.Compatibility;
+import org.apache.tapestry5.services.compatibility.Trait;
 import org.joda.time.DateTime;
 import org.reflections.Reflections;
 
@@ -100,6 +106,21 @@ public class FragariaUIModule {
 
 		configuration.add(new CoercionTuple<DateTime, java.util.Date>(
 				DateTime.class, java.util.Date.class, fromDateTime));
+	}
+
+	@Contribute(SymbolProvider.class)
+	@ApplicationDefaults
+	public static void switchProviderToJQuery(
+			MappedConfiguration<String, Object> configuration) {
+		configuration.add(SymbolConstants.JAVASCRIPT_INFRASTRUCTURE_PROVIDER,
+				"jquery");
+	}
+
+	@Contribute(Compatibility.class)
+	public static void disableScriptaculous(
+			MappedConfiguration<Trait, Boolean> configuration) {
+		configuration.add(Trait.SCRIPTACULOUS, false);
+		configuration.add(Trait.INITIALIZERS, false);
 	}
 
 }
