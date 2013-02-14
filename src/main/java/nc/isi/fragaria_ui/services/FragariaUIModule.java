@@ -2,8 +2,6 @@ package nc.isi.fragaria_ui.services;
 
 import java.math.BigDecimal;
 
-import nc.isi.fragaria_adapter_rewrite.dao.Session;
-import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_adapter_rewrite.entities.Entity;
 import nc.isi.fragaria_adapter_rewrite.services.FragariaDomainModule;
@@ -45,16 +43,14 @@ public class FragariaUIModule {
 	@SuppressWarnings("rawtypes")
 	public static void contributeValueEncoderSource(
 			MappedConfiguration<Class, ValueEncoderFactory> configuration,
-			@InjectService("SessionManager") final SessionManager sessionManager,
 			@InjectService("ReflectionProvider") final ReflectionProvider reflectionProvider) {
-		final Session session = sessionManager.create();
 		Reflections reflections = reflectionProvider.provide();
 		for (final Class<? extends Entity> entityClass : reflections
 				.getSubTypesOf(AbstractEntity.class)) {
 			ValueEncoderFactory valueEncoderFactory = new ValueEncoderFactory() {
 				@SuppressWarnings("unchecked")
 				public ValueEncoder create(Class type) {
-					return new EntityValueEncoder(entityClass, session);
+					return new EntityValueEncoder(entityClass);
 				}
 			};
 			configuration.add(entityClass, valueEncoderFactory);
