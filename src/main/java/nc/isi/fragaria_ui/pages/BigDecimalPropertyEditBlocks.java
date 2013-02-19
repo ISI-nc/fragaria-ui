@@ -17,6 +17,10 @@ public class BigDecimalPropertyEditBlocks {
 	@Component
 	private TextField bigDecimalField;
 
+	public BigDecimalPropertyEditBlocks() {
+		System.out.println("using bigDecimal property edit blocks");
+	}
+
 	public FieldTranslator<?> getBigDecimalTranslator() {
 		return context.getTranslator(bigDecimalField);
 	}

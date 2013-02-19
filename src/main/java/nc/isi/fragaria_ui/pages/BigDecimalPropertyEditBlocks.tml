@@ -3,10 +3,9 @@
 
 	<t:block id="bigDecimal">
 		<t:label for="bigDecimalField" />
-		<t:textfield t:id="bigDecimalField"
-			value="context.propertyValue" label="prop:context.label"
-			format="prop:dateInputFormat" translate="prop:bigDecimalTranslator"
+		<t:textfield t:id="bigDecimalField" value="context.propertyValue"
+			label="prop:context.label" translate="prop:bigDecimalTranslator"
 			validate="prop:bigDecimalValidator"
-			clientId="prop:context.propertyId" annotationProvider="context" />
+			clientId="prop:context.propertyId" annotationProvider="context"/>
 	</t:block>
 </t:container>

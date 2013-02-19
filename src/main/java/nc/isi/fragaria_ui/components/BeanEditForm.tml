@@ -1,5 +1,5 @@
 <form class="${className}" t:id="form" validate="object"
-	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd">
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
 	<t:errors />
 	<fieldSet>
 		<legend>${legend}</legend>
