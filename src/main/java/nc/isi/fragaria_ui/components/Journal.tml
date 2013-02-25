@@ -2,9 +2,9 @@
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
   xmlns:p="tapestry:parameter"> 
 	<span class="display-btns btn-group">
-			<t:eventlink t:event="displayAllSummaries" class="icon-plus" t:zone="journalZone">
+			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
 			</t:eventlink>
-			<t:eventlink t:event="hideAllSummaries " class="icon-minus" t:zone="journalZone">
+			<t:eventlink t:event="hideall" class="icon-minus" t:zone="journalZone">
 			</t:eventlink>
 	</span>
 	<t:zone t:id="journalZone" id="journalZone">

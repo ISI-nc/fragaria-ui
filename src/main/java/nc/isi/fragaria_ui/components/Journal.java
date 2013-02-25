@@ -168,7 +168,7 @@ public class Journal {
 		refreshZone(elementZone);
 	}
 
-	void onDisplayAllSummaries() {	
+	void onDisplayAll() {	
     	for(JournalGroup grp : groups){
     		for(JournalElement elt : grp.getElements()){
     			if(!summaryList.contains(elt.getId()))
@@ -178,7 +178,7 @@ public class Journal {
     	refreshZone(journalZone);
 	}
 	
-	void onHideAllSummaries() {    	
+	void onHideAll() {    	
     	summaryList.clear();
     	refreshZone(journalZone);
 	}
