@@ -4,4 +4,7 @@
 	<t:block id="bigDecimal">
 		<t:output t:id="bigDecimalOutput" value="context.propertyValue" format="decimalFormat" />
 	</t:block>
+	<t:block id="dateTime">
+		<t:fragaria.jodatimeoutput value="context.propertyValue" style="L-" />
+	</t:block>
 </t:container>

@@ -6,7 +6,7 @@ import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.services.PropertyOutputContext;
 
-public class BigDecimalPropertyDisplayBlocks {
+public class PropertyDisplayBlocks {
 
 	@Property
 	@Environmental

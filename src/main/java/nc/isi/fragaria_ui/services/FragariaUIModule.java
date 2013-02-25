@@ -72,13 +72,13 @@ public class FragariaUIModule {
 	public static void contributeBeanBlockSource(
 			Configuration<BeanBlockContribution> configuration) {
 		configuration.add(new DisplayBlockContribution("dateTime",
-				"fragaria/JodaTimeDisplayBlocks", "dateTime"));
+				"fragaria/PropertyDisplayBlocks", "dateTime"));
 		configuration.add(new EditBlockContribution("dateTime",
-				"fragaria/JodaTimePropertyEditBlocks", "dateTime"));
+				"fragaria/PropertyEditBlocks", "dateTime"));
 		configuration.add(new DisplayBlockContribution("bigDecimal",
-				"fragaria/BigDecimalPropertyDisplayBlocks", "bigDecimal"));
+				"fragaria/PropertyDisplayBlocks", "bigDecimal"));
 		configuration.add(new EditBlockContribution("bigDecimal",
-				"fragaria/BigDecimalPropertyEditBlocks", "bigDecimal"));
+				"fragaria/PropertyEditBlocks", "bigDecimal"));
 	}
 
 	@SuppressWarnings("rawtypes")
