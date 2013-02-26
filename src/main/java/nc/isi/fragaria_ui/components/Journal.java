@@ -37,18 +37,21 @@ import com.google.common.eventbus.Subscribe;
  *
  *The parameters are : 
  *  - a list of journalGroups,
- *  - an eventBusRecorder in order to publish to all its listener a JournalDeleteEvent 
- *  or a JournalEditEvent
+ *  - an eventBusRecorder in order to notifiy all the listeners a JournalElement has been 
+ *  deleted or has to be edited through a JournalEditEvent
  *  - a list of objects to listen to (optional, they can be set after instanciation by 
  *  using the listenTo method)
  *  these objects will be able to post Create/Edit/Cancel event in order to create/edit/remove 
  *  a JournalElement from its group (which belongs to the list given as a parameter).
+ *  
  */
 @Import(module="bootstrap",stylesheet="journal.css")
 public class Journal {
-
-	@Persist
-	private List<String> summaryList;	
+	
+	
+	@Parameter(required=true)
+	@Property
+	private LinkedList<JournalGroup> groups;
 	
 	@Parameter(required=true)
 	@Property
@@ -57,12 +60,14 @@ public class Journal {
 	@Parameter()
 	private List<Object> objectsToListenTo;
 	
-	@Parameter(required=true)
-	@Property
-	private LinkedList<JournalGroup> groups;
-		
 	@Persist
 	private EventBus eventBusListener;
+
+	@Persist
+	private List<String> elementDeletedList;	
+	
+	@Persist
+	private List<String> summaryList;	
 	
 	@Property
 	private JournalGroup group;	
@@ -77,20 +82,20 @@ public class Journal {
 	private Request request;
 	
 	@InjectComponent
-	private Zone elementZone;	
-	
-	@InjectComponent
-	private Zone groupZone;	
-	
-	@InjectComponent
 	private Zone journalZone;
 	
-	private String deletedZoneId;
+	@InjectComponent
+	private Zone groupZone;
+	
+	@InjectComponent
+	private Zone elementZone;
 	
 	@BeginRender
 	public void initialize() {
 		if(summaryList==null)
 			summaryList = Lists.newArrayList();
+		if(elementDeletedList==null)
+			elementDeletedList = Lists.newArrayList();
 		if(eventBusListener==null){
 			eventBusListener=new EventBus();
 			if(objectsToListenTo!=null)
@@ -103,60 +108,62 @@ public class Journal {
 			listenTo(object);
 	}
 
-	public void listenTo(Object object){
-		eventBusListener.register(object);
+	public void listenTo(Object...objects){
+		for (Object object : objects)
+			eventBusListener.register(object);
 	}
 	
     public String getElementZoneId()
     {
-    	if(deletedZoneId==null)
-    		return "element_"+groups.indexOf(group)+"_"+ group.getElements().indexOf(element);
-    	else
-    		return deletedZoneId;    	
+    	return "element_"+element.getId();
     }
     
     public String getGroupZoneId()
     {
-    	return "group_"+groups.indexOf(group);
+    	return "group_"+group.getId();
     }
-	
+    
 	@Subscribe public void recordCreateEvent(CreateEvent e) {
-	    create(e.getElt());
+	    createElement(e.getElt());
 	 }
 	
-	private void create(JournalElement elt) {
-		setCurrentGroup(elt);
+	private void createElement(JournalElement elt) {
+		group = getGroupFromGroupsList(elt.getGroup().getId());
+		if(elementDeletedList.contains(elt.getId()))
+				elementDeletedList.remove(elt.getId());
 		group.add(elt);
-		refreshZone(groupZone);
+		element = elt;
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(groupZone);
 	}
 
 	@Subscribe public void recordCancelEvent(CancelEvent e) {
-	    setCurrentEltAndGrp(e.getElt().getGroup(), e.getElt());
-		cancel();
+	    removeElement(e.getElt());  
 	}
-	  
-	void onCancelElement(String eltId,String gpId) {
-		setCurrentEltAndGrp(eltId, gpId);
-		cancel();	  
+	
+	void onCancelElement(String eltId,String gpId){
+		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
+		removeElement(elt);
+	}
+	
+	private void removeElement(JournalElement elt) {
+		setCurrentEltAndGrp(elt, elt.getGroup());
+		elt.removeFromGroup();
+		elementDeletedList.add(elt.getId());
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(elementZone);
+		eventBusRecorder.post(new JournalDeleteEvent(elt));
 	}
 	
 	@Subscribe public void recordEditEvent(EditEvent e) {
-	    setCurrentEltAndGrp(e.getElt().getGroup(), e.getElt());
-	    refreshZone(elementZone);
+	    setCurrentEltAndGrp(e.getElt(),e.getElt().getGroup());
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(elementZone);
 	}
-	
-	private void cancel() {
-		deletedZoneId = getElementZoneId();
-		element.removeFromGroup();
-		JournalDeleteEvent journalDeleteEvent = new JournalDeleteEvent(element);
-		element = null;
-		refreshZone(elementZone);	
-		eventBusRecorder.post(journalDeleteEvent);
-	}
-	
+
 	public void onEditElement(String eltId,String gpId) {
-		setCurrentEltAndGrp(eltId, gpId);
-		eventBusRecorder.post(new JournalEditEvent(element));
+		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
+		eventBusRecorder.post(new JournalEditEvent(elt));
 	}
 
 	void onDisplaySummary(String eltId,String gpId) {
@@ -165,8 +172,10 @@ public class Journal {
 		else
 			summaryList.add(eltId);
 		setCurrentEltAndGrp(eltId, gpId);
-		refreshZone(elementZone);
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(elementZone);
 	}
+	
 
 	void onDisplayAll() {	
     	for(JournalGroup grp : groups){
@@ -175,47 +184,42 @@ public class Journal {
     				summaryList.add(elt.getId());
     		}		
     	}
-    	refreshZone(journalZone);
+		if (request.isXHR()) {
+			ajaxResponseRenderer.addRender(journalZone);
+		}
 	}
 	
 	void onHideAll() {    	
     	summaryList.clear();
-    	refreshZone(journalZone);
+		if (request.isXHR()) {
+			ajaxResponseRenderer.addRender(journalZone);
+		}
+	}
+	
+	public Boolean elementDeleted(String eltId){
+		return elementDeletedList.contains(eltId);
 	}
 	
 	public Boolean displaySummary(String eltId){
 		return summaryList.contains(eltId);
 	}
 	
-	private void refreshZone(Zone zone) {
-		if (request.isXHR()) {
-			ajaxResponseRenderer.addRender(zone);
-		}
-	}
-	  
 	private void setCurrentEltAndGrp(String eltId, String gpId) {
 		JournalGroup grp = getGroupFromGroupsList(gpId);
-		JournalElement elt = getElementFromGroup(eltId, grp);
-		setCurrentEltAndGrp(grp, elt);
+		setCurrentEltAndGrp(getElementFromGroup(eltId, grp),grp);
 	}
-
-	private void setCurrentEltAndGrp(JournalGroup grp, JournalElement elt) {
-		element = elt;
+	
+	private void setCurrentEltAndGrp(JournalElement elt,JournalGroup grp) {
 		group = grp;
+		element = elt;
 	}
-
-	private void setCurrentGroup(JournalElement elt) {
-		JournalGroup g = alias(JournalGroup.class);
-		group = from($(g),groups)
-			  .where($(g.getId()).eq(elt.getGroup().getId()))
-			  .uniqueResult($(g));
-	}
-
+	  
 	private JournalElement getElementFromGroup(String eltId, JournalGroup grp) {
 		JournalElement e = alias(JournalElement.class);
 		JournalElement elt = from($(e),grp.getElements())
 			  .where($(e.getId()).eq(eltId))
 			  .uniqueResult($(e));
+		
 		return elt;
 	}
 
