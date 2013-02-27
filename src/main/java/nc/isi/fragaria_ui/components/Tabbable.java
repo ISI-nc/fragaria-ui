@@ -80,8 +80,11 @@ public class Tabbable<T> {
 	}
 
 	public String getClassForTab() {
-		return selectedTabName != null ? tab.toString() != null ? selectedTabName
-				.contains(tab.toString()) ? "active" : null : "active"
+		return selectedTabName != null ? tab.toString() != null ? (selectedTabName
+				.contains("\"" + tab.toString() + "\"") && selectedTabName
+				.contains("_id"))
+				|| selectedTabName.contains(tab.toString()) ? "active" : null
+				: "active"
 				: null;
 	}
 }
