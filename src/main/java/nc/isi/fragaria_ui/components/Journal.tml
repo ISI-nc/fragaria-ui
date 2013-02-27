@@ -1,0 +1,45 @@
+<t:container 
+  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+  xmlns:p="tapestry:parameter"> 
+	<span class="display-btns btn-group">
+			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
+			</t:eventlink>
+			<t:eventlink t:event="hideall" class="icon-minus" t:zone="journalZone">
+			</t:eventlink>
+	</span>
+	<t:zone t:id="journalZone" id="journalZone">
+		<table class="journal">
+			<tr>
+				<td t:type="Loop" t:source="groups" t:value="group">
+			  		<span class="group-lbl" title="${group.summary}" >${group.label}</span>
+		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
+						<div t:type="Loop" t:source="group.elements" t:value="element">
+							<t:zone class="element-item" t:id="elementZone" id="${elementzoneid}">
+								<t:if test="${!elementDeleted(element.id)}">	
+									<t:eventlink t:event="displaySummary"
+										context="[element.id,group.id]" t:zone="^">
+										${element.label}</t:eventlink>
+									<span class="element-btns">
+										<t:eventlink   t:event="editElement" t:zone="^" 
+											context="[element.id,group.id]" title="edit" 
+											class="icon-edit"></t:eventlink>
+										<t:eventlink   t:event="cancelElement" t:zone="^" 
+											context="[element.id,group.id,elementzoneid]" title="delete" 
+											class="icon-trash"></t:eventlink>
+									</span>
+									<t:if test="${displaySummary(element.id)}">
+										<div class="element-sum">${element.summary}	</div>
+										<p:else>
+			            				</p:else>
+			            			</t:if>        		
+								</t:if>
+							</t:zone>	
+						</div>	
+					</t:zone>
+				</td>
+			</tr>	
+	 	</table>
+	 </t:zone> 
+</t:container>
+
+
