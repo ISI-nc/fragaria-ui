@@ -72,6 +72,11 @@ public class Tabbable<T> {
 		selectedTabName = null;
 		isTabSelected = false;
 	}
+	
+	public void reset(String tabName) {
+		selectedTabName = tabName;
+		isTabSelected = true;
+	}
 
 	public boolean getIsCreationAllowed() {
 		return creationText != null;
