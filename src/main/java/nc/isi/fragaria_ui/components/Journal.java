@@ -124,11 +124,11 @@ public class Journal {
     }
     
 	@Subscribe public void recordCreateEvent(CreateEvent e) {
-	    createElement(e.getElt());
+	    createElement(e.getElt(),e.getGroup());
 	 }
 	
-	private void createElement(JournalElement elt) {
-		group = getGroupFromGroupsList(elt.getGroup().getId());
+	private void createElement(JournalElement elt,JournalGroup grp) {
+		group = getGroupFromGroupsList(grp.getId());
 		if(elementDeletedList.contains(elt.getId()))
 				elementDeletedList.remove(elt.getId());
 		group.add(elt);
