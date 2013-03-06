@@ -53,17 +53,15 @@ public class Tabbable<T> {
 		}
 	}
 
-	boolean onShowTab(T tab) {
+	void onShowTab(T tab) {
 		selectedTabName = tab.toString();
 		System.out.println("selectedTabName : " + selectedTabName);
 		isTabSelected = true;
-		return false;
 	}
 
-	boolean onCreate() {
+	void onCreate() {
 		selectedTabName = "null";
 		isTabSelected = true;
-		return false;
 	}
 
 	public Zone getZone() {

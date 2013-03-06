@@ -1,21 +1,23 @@
-<div t:type="zone" t:id="zone" class="tabbable ${orientation }"
+<t:container
 	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
 	xmlns:p="tapestry:parameter">
-	<ul class="nav ${tabStyle }">
-		<t:if test="isCreationAllowed">
-			<t:eventlink event="create" class="btn btn-large btn-primary">${creationText}</t:eventlink>
-		</t:if>
-		<li t:id="loop" t:type="loop" value="tab" class="${classForTab}"><t:eventlink
-				event="showTab" context="tab">${tab }</t:eventlink></li>
-	</ul>
-	<div class="tab-content">
-		<t:if test="isTabSelected">
-			<t:body />
-			<p:else>
-				<article class="hero-unit">
-					<p>${heroText }</p>
-				</article>
-			</p:else>
-		</t:if>
-	</div>
-</div>
+	<t:zone t:id="zone" id="zone" class="tabbable ${orientation }">
+		<ul class="nav ${tabStyle }">
+			<t:if test="isCreationAllowed">
+				<t:eventlink event="create" class="btn btn-large btn-primary" zone="zone">${creationText}</t:eventlink>
+			</t:if>
+			<li t:id="loop" t:type="loop" value="tab" class="${classForTab}"><t:eventlink
+					event="showTab" context="tab" zone="zone">${tab }</t:eventlink></li>
+		</ul>
+		<div class="tab-content">
+			<t:if test="isTabSelected">
+				<t:body />
+				<p:else>
+					<article class="hero-unit">
+						<p>${heroText }</p>
+					</article>
+				</p:else>
+			</t:if>
+		</div>
+	</t:zone>
+</t:container>
