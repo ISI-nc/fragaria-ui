@@ -57,7 +57,7 @@ public class Journal {
 	@Property
 	private EventBus eventBusRecorder;
 	
-	@Parameter()
+	@Parameter
 	private List<Object> objectsToListenTo;
 	
 	@Persist
@@ -98,9 +98,10 @@ public class Journal {
 			elementDeletedList = Lists.newArrayList();
 		if(eventBusListener==null){
 			eventBusListener=new EventBus();
-			if(objectsToListenTo!=null)
-				listenTo(objectsToListenTo);
-		}
+			eventBusListener.register(this);
+		}			
+		if(objectsToListenTo!=null)
+			listenTo(objectsToListenTo);
 	}
 
 	public void listenTo(Collection<Object> objects) {
@@ -109,8 +110,18 @@ public class Journal {
 	}
 
 	public void listenTo(Object...objects){
-		for (Object object : objects)
-			eventBusListener.register(object);
+		if(objectsToListenTo == null)
+			objectsToListenTo = Lists.newArrayList();
+		for (Object object : objects){
+			if(!objectsToListenTo.contains(object)){
+				objectsToListenTo.add(object);
+				eventBusListener.register(object);
+			}
+		}
+	}
+	
+	public EventBus getEventBusListener(){
+		return eventBusListener;
 	}
 	
     public String getElementZoneId()
@@ -124,6 +135,7 @@ public class Journal {
     }
     
 	@Subscribe public void recordCreateEvent(CreateEvent e) {
+		System.out.println("recordCreateEvent from journal");
 	    createElement(e.getElt(),e.getGroup());
 	 }
 	
@@ -141,7 +153,7 @@ public class Journal {
 	    removeElement(e.getElt());  
 	}
 	
-	void onCancelElement(String eltId,String gpId){
+	public void onCancelElement(String eltId,String gpId){
 		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
 		removeElement(elt);
 	}
@@ -166,7 +178,7 @@ public class Journal {
 		eventBusRecorder.post(new JournalEditEvent(elt));
 	}
 
-	void onDisplaySummary(String eltId,String gpId) {
+	public void onDisplaySummary(String eltId,String gpId) {
 		if(summaryList.contains(eltId))
 			summaryList.remove(eltId);
 		else
@@ -177,7 +189,7 @@ public class Journal {
 	}
 	
 
-	void onDisplayAll() {	
+	public void onDisplayAll() {	
     	for(JournalGroup grp : groups){
     		for(JournalElement elt : grp.getElements()){
     			if(!summaryList.contains(elt.getId()))
@@ -189,7 +201,7 @@ public class Journal {
 		}
 	}
 	
-	void onHideAll() {    	
+	public void onHideAll() {    	
     	summaryList.clear();
 		if (request.isXHR()) {
 			ajaxResponseRenderer.addRender(journalZone);
