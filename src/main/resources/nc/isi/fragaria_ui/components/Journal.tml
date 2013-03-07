@@ -15,24 +15,26 @@
 		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
 						<div t:type="Loop" t:source="group.elements" t:value="element">
 							<t:zone class="element-item" t:id="elementZone" id="${elementzoneid}">
-								<t:if test="${!elementDeleted(element.id)}">	
-									<t:eventlink t:event="displaySummary"
-										context="[element.id,group.id]" t:zone="^">
-										${element.label}</t:eventlink>
-									<span class="element-btns">
-										<t:eventlink   t:event="editElement" t:zone="^" 
-											context="[element.id,group.id]" title="edit" 
-											class="icon-pencil"></t:eventlink>
-										<t:eventlink   t:event="cancelElement" t:zone="^" 
-											context="[element.id,group.id,elementzoneid]" title="delete" 
-											class="icon-trash"></t:eventlink>
-									</span>
-									<t:if test="${displaySummary(element.id)}">
-										<div class="element-sum">${element.summary}	</div>
-										<p:else>
-			            				</p:else>
-			            			</t:if>        		
-								</t:if>
+								<div style="${colorForSelectedElement}">
+									<t:if test="${!elementDeleted(element.id)}">	
+										<t:eventlink t:event="displaySummary"
+											context="[element.id,group.id]" t:zone="^">
+											${element.label}</t:eventlink>
+										<span class="element-btns">
+											<t:eventlink   t:event="editElement" t:zone="^" 
+												context="[element.id,group.id]" title="edit" 
+												class="icon-pencil"></t:eventlink>
+											<t:eventlink   t:event="cancelElement" t:zone="^" 
+												context="[element.id,group.id,elementzoneid]" title="delete" 
+												class="icon-trash"></t:eventlink>
+										</span>
+										<t:if test="${displaySummary(element.id)}">
+											<div class="element-sum">${element.summary}	</div>
+											<p:else>
+				            				</p:else>
+				            			</t:if>        		
+									</t:if>
+								</div>
 							</t:zone>	
 						</div>	
 					</t:zone>

@@ -90,7 +90,12 @@ public class BeanEditForm implements ClientElement, FormValidationControl {
 	
 	@InjectComponent
 	private Zone formzone;
-
+	
+	@Parameter(defaultPrefix = BindingConstants.LITERAL, required = true, allowNull = false)
+	private String id;
+	
+	private boolean cancel;
+	
 	boolean onPrepareFromForm() {
 		resources.triggerEvent(EventConstants.PREPARE, null, null);
 
@@ -110,7 +115,7 @@ public class BeanEditForm implements ClientElement, FormValidationControl {
 	 * Returns the client id of the embedded form.
 	 */
 	public String getClientId() {
-		return form.getClientId();
+		return id;
 	}
 
 	public void clearErrors() {
@@ -137,6 +142,14 @@ public class BeanEditForm implements ClientElement, FormValidationControl {
 		return formzone;
 	}
 	
+	  void onSelectedFromSubmit() {
+	    cancel = false;
+	  }     
+	  void onSelectedFromCancel() {
+	     cancel = true;
+	  }
 
-
+	public boolean isCancel() {
+		return cancel;
+	}
 }

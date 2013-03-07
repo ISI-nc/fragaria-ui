@@ -84,10 +84,22 @@ public class Journal {
 	private Zone journalZone;
 	
 	@InjectComponent
+	
 	private Zone groupZone;
 	
 	@InjectComponent
 	private Zone elementZone;
+	
+	@Persist
+	@Property
+	private String elementEditedId;
+	
+	public String getColorForSelectedElement(){
+		if(element.getId().equals(elementEditedId)){
+			return "background-color:#f5f5f5;";
+		}
+		return "";
+	}
 	
 	@BeginRender
 	public void initialize() {
@@ -102,7 +114,7 @@ public class Journal {
 		if(objectsToListenTo!=null)
 			listenTo(objectsToListenTo);
 	}
-
+	
 	public void listenTo(Collection<Object> objects) {
 		for(Object object : objects)
 			listenTo(object);
@@ -144,8 +156,9 @@ public class Journal {
 				elementDeletedList.remove(elt.getId());
 		group.add(elt);
 		element = elt;
+		elementEditedId = element.getId();
 		if (request.isXHR())
-			ajaxResponseRenderer.addRender(groupZone);
+			ajaxResponseRenderer.addRender(journalZone);
 	}
 
 	@Subscribe public void recordCancelEvent(CancelEvent e) {
@@ -174,7 +187,18 @@ public class Journal {
 
 	public void onEditElement(String eltId,String gpId) {
 		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
+		group = elt.getGroup();
+		element = elt;
 		eventBusRecorder.post(new JournalEditEvent(elt));
+		elementEditedId = element.getId();
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(journalZone);
+	}
+	
+	public void reset(){
+		elementEditedId = null;
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(journalZone);
 	}
 
 	public void onDisplaySummary(String eltId,String gpId) {
