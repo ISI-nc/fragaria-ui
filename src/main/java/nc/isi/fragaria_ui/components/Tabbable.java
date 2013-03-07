@@ -1,15 +1,26 @@
 package nc.isi.fragaria_ui.components;
 
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.ClientElement;
+import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Loop;
 import org.apache.tapestry5.corelib.components.Zone;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.ValueEncoderSource;
 
-public class Tabbable<T> {
+import com.google.common.base.Objects;
+
+@Import(module = "bootstrap")
+public class Tabbable<T> implements ClientElement {
+
+	@Inject
+	private ValueEncoderSource valueEncoderSource;
 
 	@Component(id = "loop", publishParameters = "source, encoder")
 	private Loop<T> loop;
@@ -22,7 +33,7 @@ public class Tabbable<T> {
 	private Boolean isTabSelected;
 
 	@Persist
-	private String selectedTabName;
+	private T selectedTabName;
 
 	@Parameter(defaultPrefix = BindingConstants.LITERAL)
 	@Property
@@ -40,11 +51,14 @@ public class Tabbable<T> {
 	@Property
 	private String tabStyle;
 
-	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-	private String defaultSelected;
+	@Parameter(defaultPrefix = BindingConstants.PROP)
+	private T defaultSelected;
 
 	@InjectComponent
 	private Zone zone;
+
+	@Parameter(defaultPrefix = BindingConstants.LITERAL, required = true, allowNull = false)
+	private String id;
 
 	void setUpRender() {
 		if (isTabSelected == null) {
@@ -53,14 +67,19 @@ public class Tabbable<T> {
 		}
 	}
 
+	/**
+	 * no matter T: tab is String (valueEncoder.clientValue())
+	 * 
+	 * @see getClassForTab() for consequences
+	 * @param tab
+	 */
 	void onShowTab(T tab) {
-		selectedTabName = tab.toString();
-		System.out.println("selectedTabName : " + selectedTabName);
+		selectedTabName = tab;
 		isTabSelected = true;
 	}
 
 	void onCreate() {
-		selectedTabName = "null";
+		selectedTabName = null;
 		isTabSelected = true;
 	}
 
@@ -72,8 +91,8 @@ public class Tabbable<T> {
 		selectedTabName = null;
 		isTabSelected = false;
 	}
-	
-	public void reset(String tabName) {
+
+	public void reset(T tabName) {
 		selectedTabName = tabName;
 		isTabSelected = true;
 	}
@@ -82,12 +101,26 @@ public class Tabbable<T> {
 		return creationText != null;
 	}
 
+	/**
+	 * forced to use the valueEncoder trick because of onShowTab bug
+	 * 
+	 * @return
+	 */
 	public String getClassForTab() {
-		return selectedTabName != null ? tab.toString() != null ? (selectedTabName
-				.contains("\"" + tab.toString() + "\"") && selectedTabName
-				.contains("_id"))
-				|| selectedTabName.contains(tab.toString()) ? "active" : null
-				: "active"
+		if (selectedTabName == null || tab == null) {
+			return null;
+		}
+		return Objects.equal(
+				getValueEncoder(tab).toValue(selectedTabName.toString()), tab) ? "active"
 				: null;
+	}
+
+	private ValueEncoder<?> getValueEncoder(T tab) {
+		return valueEncoderSource.getValueEncoder(tab.getClass());
+	}
+
+	@Override
+	public String getClientId() {
+		return id;
 	}
 }
