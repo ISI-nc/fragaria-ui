@@ -33,6 +33,7 @@ public class EntityValueEncoder<V extends Entity> implements ValueEncoder<V> {
 	public V toValue(String clientValue) {
 		try {
 			LOGGER.info("clientValue : " + clientValue);
+			LOGGER.info(objectMapper.readValue(clientValue, type));
 			return objectMapper.readValue(clientValue, type);
 		} catch (IOException e) {
 			throw Throwables.propagate(e);

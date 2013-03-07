@@ -45,14 +45,14 @@ public class FragariaUIModule {
 			MappedConfiguration<Class, ValueEncoderFactory> configuration,
 			@InjectService("ReflectionProvider") final ReflectionProvider reflectionProvider) {
 		Reflections reflections = reflectionProvider.provide();
+		ValueEncoderFactory valueEncoderFactory = new ValueEncoderFactory() {
+			@SuppressWarnings("unchecked")
+			public ValueEncoder create(Class type) {
+				return new EntityValueEncoder(type);
+			}
+		};
 		for (final Class<? extends Entity> entityClass : reflections
 				.getSubTypesOf(AbstractEntity.class)) {
-			ValueEncoderFactory valueEncoderFactory = new ValueEncoderFactory() {
-				@SuppressWarnings("unchecked")
-				public ValueEncoder create(Class type) {
-					return new EntityValueEncoder(entityClass);
-				}
-			};
 			configuration.add(entityClass, valueEncoderFactory);
 		}
 
