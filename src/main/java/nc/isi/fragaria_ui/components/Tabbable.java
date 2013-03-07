@@ -95,8 +95,8 @@ public class Tabbable<T> implements ClientElement {
 		selectedTabName = null;
 		isTabSelected = false;
 	}
-	
-	public void reset(String tabName) {
+
+	public void reset(T tabName) {
 		selectedTabName = tabName;
 		isTabSelected = true;
 	}
