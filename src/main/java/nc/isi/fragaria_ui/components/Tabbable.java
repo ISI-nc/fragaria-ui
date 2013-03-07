@@ -75,10 +75,6 @@ public class Tabbable<T> implements ClientElement {
 	 */
 	void onShowTab(T tab) {
 		selectedTabName = tab;
-		System.out.println(tab.getClass());
-		System.out.println("select tab");
-		System.out.println("selectedTabName : " + selectedTabName);
-		System.out.println("tab : " + tab);
 		isTabSelected = true;
 	}
 
