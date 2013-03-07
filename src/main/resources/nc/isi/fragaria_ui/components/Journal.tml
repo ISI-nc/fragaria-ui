@@ -22,7 +22,7 @@
 									<span class="element-btns">
 										<t:eventlink   t:event="editElement" t:zone="^" 
 											context="[element.id,group.id]" title="edit" 
-											class="icon-edit"></t:eventlink>
+											class="icon-pencil"></t:eventlink>
 										<t:eventlink   t:event="cancelElement" t:zone="^" 
 											context="[element.id,group.id,elementzoneid]" title="delete" 
 											class="icon-trash"></t:eventlink>

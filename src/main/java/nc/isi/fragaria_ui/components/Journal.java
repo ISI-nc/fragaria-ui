@@ -48,7 +48,6 @@ import com.google.common.eventbus.Subscribe;
 @Import(module="bootstrap",stylesheet="journal.css")
 public class Journal {
 	
-	
 	@Parameter(required=true)
 	@Property
 	private LinkedList<JournalGroup> groups;
@@ -168,7 +167,7 @@ public class Journal {
 	}
 	
 	@Subscribe public void recordEditEvent(EditEvent e) {
-	    setCurrentEltAndGrp(e.getElt(),e.getElt().getGroup());
+		setCurrentEltAndGrp(e.getElt(),e.getElt().getGroup());
 		if (request.isXHR())
 			ajaxResponseRenderer.addRender(elementZone);
 	}

@@ -1,17 +1,23 @@
-<form class="${className}" t:id="form" validate="object"
-	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
-	<t:errors />
-	<fieldSet>
-		<legend>${legend}</legend>
-		<t:beaneditor t:id="editor" object="object" model="model"
-			overrides="this" />
-		<div class="form-actions btn-toolbar">
-			<div class="btn-group">
-				<t:submit t:id="submit" class="btn btn-primary"
-					value="message:core-submit-label" />
-				<t:submit t:id="cancel" mode="cancel" class="btn"
-					value="message:core-cancel-label" />
-			</div>
-		</div>
-	</fieldSet>
-</form>
+<t:container
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+	xmlns:p="tapestry:parameter">
+	<t:zone id="formzone" t:id="formzone">
+		<form class="${className}" t:zone="formzone" t:id="form" validate="object"
+			xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+			<t:errors />
+			<fieldSet>
+				<legend>${legend}</legend>
+				<t:beaneditor t:id="editor" object="object" model="model"
+					overrides="this" />
+				<div class="form-actions btn-toolbar">
+					<div class="btn-group">
+						<t:submit t:id="submit" class="btn btn-primary"
+							value="message:core-submit-label" />
+						<t:submit t:id="cancel" mode="cancel" class="btn"
+							value="message:core-cancel-label" />
+					</div>
+				</div>
+			</fieldSet>
+		</form>
+	</t:zone>
+</t:container>
