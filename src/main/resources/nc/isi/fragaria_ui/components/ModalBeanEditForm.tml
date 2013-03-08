@@ -1,8 +1,7 @@
-<section id="${object.id }" class="well"
+<t:container 
 	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
 	xmlns:p="tapestry:parameter">
 	<t:zone t:id="modalZone" id="${clientId }">
-		<a href="#${object.id }-modal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
 		<div id="${object.id }-modal" tabindex="-1"
 			role="dialog" aria-labelledby="${object.id }-Label" style="display: ${display};" 
 			aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
@@ -27,4 +26,4 @@
 		</div>
 		<div t:type="eventlink" t:zone="^" type="reset"  event="modalReset"  t:id="backdrop" class="modal-backdrop fade ${fade}" style="display: ${display};"></div>
 	</t:zone>
-</section>
+</t:container>
