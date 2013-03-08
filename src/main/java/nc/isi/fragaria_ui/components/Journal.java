@@ -96,7 +96,7 @@ public class Journal {
 	
 	public String getColorForSelectedElement(){
 		if(element.getId().equals(elementEditedId)){
-			return "background-color:#f5f5f5;";
+			return "background-color:white;";
 		}
 		return "";
 	}

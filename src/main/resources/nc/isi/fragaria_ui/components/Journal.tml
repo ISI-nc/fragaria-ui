@@ -1,6 +1,7 @@
 <t:container 
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
+<section class="well">
 	<span class="display-btns btn-group">
 			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
 			</t:eventlink>
@@ -42,6 +43,7 @@
 			</tr>	
 	 	</table>
 	 </t:zone> 
+	</section>
 </t:container>
 
 
