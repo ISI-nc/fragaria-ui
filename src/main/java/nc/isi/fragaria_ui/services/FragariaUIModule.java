@@ -12,6 +12,7 @@ import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.SubModule;
@@ -32,6 +33,11 @@ import org.reflections.Reflections;
 @SubModule(FragariaDomainModule.class)
 public class FragariaUIModule {
 
+	
+	public static void bind(ServiceBinder binder) {
+		binder.bind(BeanModelBuilder.class, BeanModelBuilderImpl.class);
+	}
+	
 	/**
 	 * Contributes {@link ValueEncoderFactory}s for all registered Fragaria
 	 * entity classes. Encoding and decoding are based on the id property value

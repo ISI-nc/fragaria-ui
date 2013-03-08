@@ -1,0 +1,30 @@
+<section id="${object.id }" class="well"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
+	xmlns:p="tapestry:parameter">
+	<t:zone t:id="modalZone" id="${clientId }">
+		<a href="#${object.id }-modal" role="button" class="btn" data-toggle="modal">Launch demo modal</a>
+		<div id="${object.id }-modal" tabindex="-1"
+			role="dialog" aria-labelledby="${object.id }-Label" style="display: ${display};" 
+			aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
+			<t:form t:id="infoForm" t:zone="${clientId }">
+				<div class="modal-header">
+					<t:eventlink type="button" t:id="cancelCross" event="canceled"
+						class="close" data-dismiss="modal" t:zone="^" aria-hidden="${ariahidden}"></t:eventlink>
+					<h3 id="${object.id }-Label">${label}</h3>
+				</div>
+				<div class="modal-body">
+					<t:errors />
+					<t:beaneditor t:id="object" model="getModel(object)">
+					</t:beaneditor>
+				</div>
+				<div class="modal-footer">
+					<t:submit t:id="submit" class="btn btn-primary"
+							value="message:core-submit-label" />
+					<input t:type="eventlink" t:zone="^" type="reset" t:id="modalReset" class="btn" data-dismiss="modal"
+						aria-hidden="${ariahidden}" event="modalReset" >${message:core-cancel-label}</input>
+				</div>
+			</t:form>
+		</div>
+		<div t:type="eventlink" t:zone="^" type="reset"  event="modalReset"  t:id="backdrop" class="modal-backdrop fade ${fade}" style="display: ${display};"></div>
+	</t:zone>
+</section>
