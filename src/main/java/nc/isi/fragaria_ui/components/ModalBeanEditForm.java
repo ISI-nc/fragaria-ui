@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-@Import(module = "bootstrap")
+@Import(module = "bootstrap",stylesheet="modalBeanEditForm.css")
 public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElement {
 
 	@Inject
@@ -70,7 +70,7 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	 * name as the component id.
 	 */
 	
-	@Parameter(required = true, autoconnect = true)
+	@Persist
 	@Property
 	private T object;
 	
@@ -86,16 +86,21 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	@InjectComponent
 	private Zone modalZone;
 	
+	@Persist
 	@Property
 	private String ariaHidden;
 	
+	@Persist
 	@Property
 	private String fade;
 	
+	@Persist
 	@Property
 	private String display;
 	
-	private Boolean editable = false;
+	@Property
+	@Persist
+	private Boolean editable;
 	
 
 	@Parameter(defaultPrefix = BindingConstants.LITERAL, required = true, allowNull = false)
@@ -112,6 +117,7 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 				}
 
 			});
+
 
 	private final LoadingCache<Class<T>, BeanModel<T>> editModelCache = CacheBuilder
 			.newBuilder()
@@ -158,32 +164,26 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	
 	@Subscribe public void recordDisplayEvent(DisplayEvent<T> e) {
-	     object = e.getObject();
-		 ariaHidden = "false";
-	     display = "block";
-		 fade = "in";
-		 editable = e.getEditable();
-		 if(request.isXHR())
-		    	 ajaxResponseRenderer.addRender(modalZone);
+		System.out.println("Event raised");
+		object = e.getObject();
+		ariaHidden = "false";
+	    display = "block";
+		fade = "in";
+		editable = e.getEditable();
+		
 	}
 	
 	public void onModalReset(){
-	     ariaHidden = "";
+		ariaHidden = "";
 	     display = "none";
 	     fade = "";
 	     editable = false;
-	    //reload object
-	    // object = object.getSession().getUnique(new IdQuery<T>((Class<T>) object.getClass(),object.getId()), false);
 	     if(request.isXHR())
 	    	 ajaxResponseRenderer.addRender(modalZone);
 	}
 	
 	void onSuccess(){	
 		object.getSession().post();
-	     ariaHidden = "";
-	     display = "none";
-	     fade = "";
-	     editable = false;
 	     if(request.isXHR())
 	    	 ajaxResponseRenderer.addRender(modalZone);
 	}
@@ -206,6 +206,10 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	public EventBus getEventBusListener(){
 		return eventBusListener;
+	}
+	
+	public Zone getZone(){
+		return modalZone;
 	}
 	
 }

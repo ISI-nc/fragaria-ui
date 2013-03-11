@@ -1,0 +1,16 @@
+<t:container 
+  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+  xmlns:p="tapestry:parameter"> 
+	<t:zone t:id="zoneESBar" id="zone_${clientid}">
+		<form t:id="form" class = "form-search" id="form_{clientid}" t:type="form" t:zone="^">
+			<div class="input-append">
+			 	<input t:type="TextField" class="span2 search-query input-small" t:id="searchField" 
+			 		value="entry" minChars="${minChars}" t:mixins="Autocomplete"/>                
+			    <button type="submit" class="btn"><i class="icon-search"></i></button>   
+		  </div>
+		  <t:errors/>     
+		</form>
+	</t:zone>
+	<t:fragaria.modalbeaneditform t:id="modalbeaneditform" id="modalbeaneditform" 
+	 label="${entry}"></t:fragaria.modalbeaneditform>
+</t:container>
