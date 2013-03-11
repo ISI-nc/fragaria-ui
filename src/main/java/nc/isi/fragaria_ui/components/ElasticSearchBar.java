@@ -52,6 +52,9 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Property
 	@Persist
 	private String entry;
+	
+	@Persist
+	private String prevInput;
 		
 	@Component(id="modalbeaneditform")
 	private ModalBeanEditForm<T> modalbeaneditform;
@@ -73,7 +76,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Property
 	@Persist
 	private EventBus eventBusRecorder;
-	
 	
 	@Inject
 	private AjaxResponseRenderer ajaxResponseRenderer;
@@ -107,7 +109,8 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	
 	 String[] onProvideCompletionsFromSearchField(String input)
 	 {	
-		
+		if(prevInput==null)
+			prevInput="";
 		if(session==null)
 			session = sessionManager.create();
 		if(propertiesToDisplay==null)
@@ -120,7 +123,7 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			for(String prop : propertiesToSearchOn)
 				boolQuery.should(QueryBuilders.prefixQuery(prop, part));
 			
-		if(map.entrySet().size()>=limit || map.entrySet().size()==0){
+		if(map.entrySet().size()>=limit || map.entrySet().size()==0 || prevInput.length()>input.length()){
 			try {
 				Collection<T> results = session.get(new SearchQuery<>(type, boolQuery, limit));
 				map.clear();
@@ -138,14 +141,24 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			}
 			
 		}
+		prevInput = input;
 		return map.keySet().toArray(new String[map.keySet().size()]);
 	}
 	 
 	void onSuccess(){
 		 if(map.containsKey(entry)){
-			 eventBusRecorder.post(new DisplayEvent<AbstractEntity>(map.get(entry), true));
+			 T object = map.get(entry);
+			 eventBusRecorder.post(new DisplayEvent<AbstractEntity>(object, true));
+			 map.remove(entry);
+			 String dataToDisplay="";
+			 for(String prop : propertiesToDisplay)
+				 dataToDisplay+= object.metadata().read(object, prop)+" ";
+			 map.put(dataToDisplay, object);
+			 entry = dataToDisplay;
 			 if(request.isXHR())
-				 ajaxResponseRenderer.addRender(modalbeaneditform.getZone());
+				 ajaxResponseRenderer
+				 .addRender(modalbeaneditform.getZone())
+				 .addRender(zoneESBar);
 		 } 
 	 }
 
