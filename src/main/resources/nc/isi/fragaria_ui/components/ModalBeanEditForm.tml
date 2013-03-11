@@ -7,8 +7,8 @@
 				aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
 				<t:form t:id="infoForm" t:zone="^">
 					<div class="modal-header">
-						<t:eventlink type="button" t:id="cancelCross" event="canceled"
-							class="close" data-dismiss="modal" t:zone="^" aria-hidden="${ariahidden}"></t:eventlink>
+						<t:eventlink type="button" t:id="cancelCross" event="modalReset"
+							class="close" data-dismiss="modal" t:zone="^" aria-hidden="${ariahidden}">x</t:eventlink>
 						<h3 id="label_${clientId }">${label}</h3>
 					</div>
 					<div class="modal-body">
