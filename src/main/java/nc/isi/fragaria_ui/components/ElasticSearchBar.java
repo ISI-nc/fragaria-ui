@@ -121,9 +121,12 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 		for(String part : array)
 			for(String prop : propertiesToSearchOn)
-				boolQuery.should(QueryBuilders.prefixQuery(prop, part));
-			
-		if(map.entrySet().size()>=limit || map.entrySet().size()==0 || prevInput.length()>input.length()){
+				boolQuery.should(QueryBuilders.prefixQuery(prop, part));		
+		
+		if(map.entrySet().size()>=limit 
+				|| map.entrySet().size()==0 
+				|| prevInput.length()>input.length() 
+				|| input.length()>=minChars){
 			try {
 				Collection<T> results = session.get(new SearchQuery<>(type, boolQuery, limit));
 				map.clear();
