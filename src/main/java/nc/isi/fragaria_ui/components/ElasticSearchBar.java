@@ -134,12 +134,17 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			try {
 				Collection<T> results = session.get(new SearchQuery<>(type, boolQuery, limit));
 				map.clear();
+				matches.clear();
 				for(T object : results){
 					 String dataToDisplay="";
 					 for(String prop : propertiesToDisplay)
 						 dataToDisplay+= object.metadata().read(object, prop)+" ";
 					 map.put(dataToDisplay, object);
 				}
+
+				matches.addAll(map.keySet());
+				Collections.sort(matches);
+				
 			} catch (Exception e) {
 	            form.recordError(searchField, 
 	            		"You must configure ElasticsearchAdapter correctly to use the SearchBar.");
@@ -149,8 +154,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			
 		}
 		prevInput = input;
-		matches.addAll(map.keySet());
-		Collections.sort(matches);
 		return matches.toArray(new String[matches.size()]);
 	}
 	 
