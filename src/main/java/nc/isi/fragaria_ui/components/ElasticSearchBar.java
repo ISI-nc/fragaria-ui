@@ -1,6 +1,7 @@
 package nc.isi.fragaria_ui.components;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
@@ -89,6 +91,8 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Parameter(defaultPrefix = BindingConstants.LITERAL, required = true, allowNull = false)
 	private String id;
     
+	private final List<String> matches = Lists.newArrayList();
+	
 	public String getClientId() {
 		return id;
 	}
@@ -121,7 +125,7 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
 		for(String part : array)
 			for(String prop : propertiesToSearchOn)
-				boolQuery.should(QueryBuilders.prefixQuery(prop, part));		
+				boolQuery.should(QueryBuilders.matchPhrasePrefixQuery(prop, part));		
 		
 		if(map.entrySet().size()>=limit 
 				|| map.entrySet().size()==0 
@@ -145,7 +149,9 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			
 		}
 		prevInput = input;
-		return map.keySet().toArray(new String[map.keySet().size()]);
+		matches.addAll(map.keySet());
+		Collections.sort(matches);
+		return matches.toArray(new String[matches.size()]);
 	}
 	 
 	void onSuccess(){
