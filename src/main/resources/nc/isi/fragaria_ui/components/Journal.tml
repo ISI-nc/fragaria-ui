@@ -2,14 +2,19 @@
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
 	<div class="display-btns btn-group">
-			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
+			<t:eventlink t:event="displayall" class="icon-resize-full" t:zone="journalZone">
 			</t:eventlink>
-			<t:eventlink t:event="hideall" class="icon-minus" t:zone="journalZone">
+			<t:eventlink t:event="hideall" class="icon-resize-small" t:zone="journalZone">
 			</t:eventlink>
 	</div>
 	<t:zone t:id="journalZone" id="journalZone">
 			<div class="group" t:type="Loop" t:source="groups" t:value="group">
 		  			<span class="group-lbl" title="${group.summary}" >${group.label}</span>
+		  			<span class="group-btns">
+		  				<t:eventlink t:event="createElement" class="icon-plus" 
+		  					context="[group.id]" t:zone="^" >
+		  					</t:eventlink>
+		  			</span>
 		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
 						<div t:type="Loop" t:source="group.elements" t:value="element">
 							<t:zone  t:id="elementZone" id="${elementzoneid}">

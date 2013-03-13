@@ -13,6 +13,7 @@ import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
 import nc.isi.fragaria_ui.utils.journal.events.CancelEvent;
 import nc.isi.fragaria_ui.utils.journal.events.CreateEvent;
 import nc.isi.fragaria_ui.utils.journal.events.EditEvent;
+import nc.isi.fragaria_ui.utils.journal.events.JournalCreateEvent;
 import nc.isi.fragaria_ui.utils.journal.events.JournalDeleteEvent;
 import nc.isi.fragaria_ui.utils.journal.events.JournalEditEvent;
 
@@ -150,12 +151,17 @@ public class Journal {
     }
     
 	@Subscribe public void recordCreateEvent(CreateEvent e) {
-		System.out.println("recordCreateEvent from journal");
 	    createElement(e.getElt(),e.getGroup());
 	 }
 	
+	public void onCreateElement(String gpId){
+		JournalElement elt = new JournalElement();
+		getGroupFromGroupsList(gpId).add(elt);
+		eventBusRecorder.post(new JournalCreateEvent(elt));
+	}
+	
 	private void createElement(JournalElement elt,JournalGroup grp) {
-		group = getGroupFromGroupsList(grp.getId());
+		group = grp;
 		if(elementDeletedList.contains(elt.getId()))
 				elementDeletedList.remove(elt.getId());
 		group.add(elt);
