@@ -4,7 +4,6 @@ import static com.mysema.query.alias.Alias.$;
 import static com.mysema.query.alias.Alias.alias;
 import static com.mysema.query.collections.MiniApi.from;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,24 +115,6 @@ public class Journal {
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
 		}			
-		if(objectsToListenTo!=null)
-			listenTo(objectsToListenTo);
-	}
-	
-	public void listenTo(Collection<Object> objects) {
-		for(Object object : objects)
-			listenTo(object);
-	}
-
-	public void listenTo(Object...objects){
-		if(objectsToListenTo == null)
-			objectsToListenTo = Lists.newArrayList();
-		for (Object object : objects){
-			if(!objectsToListenTo.contains(object)){
-				objectsToListenTo.add(object);
-				eventBusListener.register(object);
-			}
-		}
 	}
 	
 	public EventBus getEventBusListener(){
