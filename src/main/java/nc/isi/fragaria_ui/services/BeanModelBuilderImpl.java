@@ -9,12 +9,15 @@ import java.util.Map;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_adapter_rewrite.entities.EntityMetadata;
 
+import org.apache.log4j.Logger;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.services.BeanModelSource;
 
 @SuppressWarnings("rawtypes")
 public class BeanModelBuilderImpl implements BeanModelBuilder {
+	private static final Logger LOGGER = Logger
+			.getLogger(EntityValueEncoder.class);
 	private final BeanModelSource beanModelSource;
 	private final Map<String, BeanModelDefinition> beanModelDefinitions;
 
@@ -40,28 +43,32 @@ public class BeanModelBuilderImpl implements BeanModelBuilder {
 		if (name != null) {
 			BeanModelDefinition<T> beanModelDefinition = (BeanModelDefinition<T>) beanModelDefinitions
 					.get(name);
-			checkArgument(beanModelDefinition != null,
-					"aucune beanModelDefinition trouvée pour : %s", name);
-			checkState(
-					beanModelDefinition.beanClass().equals(type),
-					"la beanDefinition (type : %s) n'est pas du type attendu (%s)",
-					beanModelDefinition.beanClass(), type);
-			EntityMetadata entityMetadata = new EntityMetadata(type);
-			if (beanModelDefinition.exclude() != null) {
-				beanModel.exclude(beanModelDefinition.exclude());
-			}
-			if (beanModelDefinition.add() != null) {
-				for (String property : beanModelDefinition.add()) {
-					String dataType = Collection.class
-							.isAssignableFrom(entityMetadata
-									.propertyType(property)) ? property
-							: entityMetadata.propertyType(property)
-									.getSimpleName();
-					beanModel.add(property).dataType(dataType);
+			if(beanModelDefinition!=null){
+				checkArgument(beanModelDefinition != null,
+						"aucune beanModelDefinition trouvée pour : %s", name);
+				checkState(
+						beanModelDefinition.beanClass().equals(type),
+						"la beanDefinition (type : %s) n'est pas du type attendu (%s)",
+						beanModelDefinition.beanClass(), type);
+				EntityMetadata entityMetadata = new EntityMetadata(type);
+				if (beanModelDefinition.exclude() != null) {
+					beanModel.exclude(beanModelDefinition.exclude());
 				}
-			}
-			if (beanModelDefinition.reOrder() != null) {
-				beanModel.reorder(beanModelDefinition.reOrder());
+				if (beanModelDefinition.add() != null) {
+					for (String property : beanModelDefinition.add()) {
+						String dataType = Collection.class
+								.isAssignableFrom(entityMetadata
+										.propertyType(property)) ? property
+								: entityMetadata.propertyType(property)
+										.getSimpleName();
+						beanModel.add(property).dataType(dataType);
+					}
+				}
+				if (beanModelDefinition.reOrder() != null) {
+					beanModel.reorder(beanModelDefinition.reOrder());
+				}
+			}else{
+				LOGGER.info("aucune beanModelDefinition trouvée pour : "+name+" un modèle de base sera généré automatiquement");
 			}
 		}
 	}

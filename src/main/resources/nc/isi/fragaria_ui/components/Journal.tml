@@ -1,23 +1,20 @@
 <t:container 
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
-<section class="well">
-	<span class="display-btns btn-group">
+	<div class="display-btns btn-group">
 			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
 			</t:eventlink>
 			<t:eventlink t:event="hideall" class="icon-minus" t:zone="journalZone">
 			</t:eventlink>
-	</span>
+	</div>
 	<t:zone t:id="journalZone" id="journalZone">
-		<table class="journal">
-			<tr>
-				<td t:type="Loop" t:source="groups" t:value="group">
-			  		<span class="group-lbl" title="${group.summary}" >${group.label}</span>
+			<div class="group" t:type="Loop" t:source="groups" t:value="group">
+		  			<span class="group-lbl" title="${group.summary}" >${group.label}</span>
 		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
 						<div t:type="Loop" t:source="group.elements" t:value="element">
-							<t:zone class="element-item" t:id="elementZone" id="${elementzoneid}">
-								<div style="${colorForSelectedElement}">
-									<t:if test="${!elementDeleted(element.id)}">	
+							<t:zone  t:id="elementZone" id="${elementzoneid}">
+								<t:if test="${!elementDeleted(element.id)}">
+									<div class="element-item" style="${colorForSelectedElement}">
 										<t:eventlink t:event="displaySummary"
 											context="[element.id,group.id]" t:zone="^">
 											${element.label}</t:eventlink>
@@ -33,17 +30,14 @@
 											<div class="element-sum">${element.summary}	</div>
 											<p:else>
 				            				</p:else>
-				            			</t:if>        		
+				            			</t:if>   
+      									</div>     		
 									</t:if>
-								</div>
 							</t:zone>	
 						</div>	
 					</t:zone>
-				</td>
-			</tr>	
-	 	</table>
-	 </t:zone> 
-	</section>
+	 		</div>
+	 	</t:zone> 
 </t:container>
 
 

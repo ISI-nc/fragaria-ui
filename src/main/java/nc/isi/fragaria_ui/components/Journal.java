@@ -59,6 +59,10 @@ public class Journal {
 	@Parameter
 	private List<Object> objectsToListenTo;
 	
+	@Parameter(value="false")
+	@Property
+	private Boolean vertical;
+	
 	@Persist
 	private EventBus eventBusListener;
 
