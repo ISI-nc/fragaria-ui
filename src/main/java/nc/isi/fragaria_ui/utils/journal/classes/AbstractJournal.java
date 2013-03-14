@@ -2,22 +2,17 @@ package nc.isi.fragaria_ui.utils.journal.classes;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-
-import org.apache.tapestry5.beaneditor.NonVisual;
-
 
 
 public class AbstractJournal {
 
-	@Column(nullable = false)
-	@NonVisual
 	private String id;
 	
 	private String label;
 	
 	private String summary;
 	
+	private Object wrappedObject;
 	
 	public AbstractJournal() {
 		super();
@@ -55,5 +50,14 @@ public class AbstractJournal {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+	
+	public Object getWrappedObject() {
+		return wrappedObject;
+	}
+
+
+	public void setWrappedObject(Object wrappedObject) {
+		this.wrappedObject = wrappedObject;
 	}
 }
