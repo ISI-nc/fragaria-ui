@@ -111,6 +111,8 @@ public class Journal {
 	
 	@BeginRender
 	public void initialize() {
+		if(groups==null)
+			groups = Lists.newLinkedList();
 		if(summaryList==null)
 			summaryList = Lists.newArrayList();
 		if(elementDeletedList==null)
@@ -118,7 +120,7 @@ public class Journal {
 		if(eventBusListener==null){
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
-		}			
+		}
 	}
 	
 	public EventBus getEventBusListener(){

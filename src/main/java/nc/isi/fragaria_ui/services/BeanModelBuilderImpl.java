@@ -1,7 +1,6 @@
 package nc.isi.fragaria_ui.services;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
 import java.util.Map;
@@ -41,15 +40,17 @@ public class BeanModelBuilderImpl implements BeanModelBuilder {
 	protected <T extends AbstractEntity> void updateBeanModel(Class<T> type,
 			String name, BeanModel<T> beanModel) {
 		if (name != null) {
-			BeanModelDefinition<T> beanModelDefinition = (BeanModelDefinition<T>) beanModelDefinitions
-					.get(name);
+			BeanModelDefinition<T> beanModelDefinition = null;
+			Class<?> beanModelClass = type;
+			while(beanModelClass!=null && beanModelDefinition==null){
+				beanModelDefinition = (BeanModelDefinition<T>) beanModelDefinitions
+						.get(beanModelClass.toString());
+				beanModelClass = beanModelClass.getSuperclass();
+			}
 			if(beanModelDefinition!=null){
 				checkArgument(beanModelDefinition != null,
 						"aucune beanModelDefinition trouvée pour : %s", name);
-				checkState(
-						beanModelDefinition.beanClass().equals(type),
-						"la beanDefinition (type : %s) n'est pas du type attendu (%s)",
-						beanModelDefinition.beanClass(), type);
+				LOGGER.info("beanModelDefinition trouvée pour : "+name+" : "+beanModelDefinition.beanModelKey());
 				EntityMetadata entityMetadata = new EntityMetadata(type);
 				if (beanModelDefinition.exclude() != null) {
 					beanModel.exclude(beanModelDefinition.exclude());

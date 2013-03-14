@@ -1,14 +1,15 @@
 <t:container 
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
-	<div class="display-btns btn-group">
-			<t:eventlink t:event="displayall" class="icon-resize-full" t:zone="journalZone">
-			</t:eventlink>
-			<t:eventlink t:event="hideall" class="icon-resize-small" t:zone="journalZone">
-			</t:eventlink>
-	</div>
+<!-- 	<div class="display-btns btn-group"> -->
+<!-- 			<t:eventlink t:event="displayall" class="icon-resize-full" t:zone="journalZone"> -->
+<!-- 			</t:eventlink> -->
+<!-- 			<t:eventlink t:event="hideall" class="icon-resize-small" t:zone="journalZone"> -->
+<!-- 			</t:eventlink> -->
+<!-- 	</div> -->
 	<t:zone t:id="journalZone" id="journalZone">
 			<div class="group" t:type="Loop" t:source="groups" t:value="group">
+		  		<t:if test="group">	
 		  			<div class="group-item" title="${group.summary}" >
 		  				${group.label}
 		  				<span class="group-btns">
@@ -50,8 +51,9 @@
 							+ ${newElementLabel}</t:eventlink>
 						</div>
 					</t:zone>
+				</t:if>
 	 		</div>
-	 		<div class="group group-item" title="${group.summary}" >
+	 		<div class="group group-item" title="${newGroupLabel}" >
 		 		<t:eventlink t:event="createGroup" t:zone="^" >
 		 		+ ${newGroupLabel}</t:eventlink>
 	 		</div>
