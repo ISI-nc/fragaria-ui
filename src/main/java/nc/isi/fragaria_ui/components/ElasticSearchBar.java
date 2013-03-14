@@ -9,7 +9,7 @@ import nc.isi.fragaria_adapter_rewrite.dao.SearchQuery;
 import nc.isi.fragaria_adapter_rewrite.dao.Session;
 import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
-import nc.isi.fragaria_ui.utils.modalbeaneditform.events.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.AfterRender;

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_ui.services.BeanModelBuilder;
-import nc.isi.fragaria_ui.utils.modalbeaneditform.events.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.ClientElement;
@@ -164,13 +164,11 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	
 	@Subscribe public void recordDisplayEvent(DisplayEvent<T> e) {
-		System.out.println("Event raised");
 		object = e.getObject();
 		ariaHidden = "false";
 	    display = "block";
-		fade = "in";
+	    fade = "in";
 		editable = e.getEditable();
-		
 	}
 	
 	public void onModalReset(){

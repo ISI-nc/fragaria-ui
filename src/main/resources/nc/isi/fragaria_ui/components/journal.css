@@ -1,8 +1,11 @@
 .element-item{width:12em;padding:.3em .8em .3em .8em;vertical-align:top;}
 .element-item:hover { background-color:white; }
 .element-item a{text-decoration: none !important; color: inherit;}
-.element-sum{line-height:1.1em;text-align:left; margin-left:1.5em;font-size:96%;font-style:italic}
-.group-lbl{ font-weight:bold;}
 .element-btns{float:right;}
+.element-sum{line-height:1.1em;text-align:left; margin-left:1.5em;font-size:96%;font-style:italic}
+.element-new{width:12em;padding:.3em .8em .3em .8em;vertical-align:top;}
+.group{font-size:15px;display:inline-table;margin:0em .5em 0em .5em;background-color:rgb(231, 231, 233);}
+.group-item{ font-weight:bold;padding:.5em .5em .5em .5em;background-color:rgb(218, 218, 202);}
+.group-btns{float:right;}
 .display-btns{float:right;}
-.group{font-size:15px;display:inline-table;}
+

@@ -9,17 +9,22 @@
 	</div>
 	<t:zone t:id="journalZone" id="journalZone">
 			<div class="group" t:type="Loop" t:source="groups" t:value="group">
-		  			<span class="group-lbl" title="${group.summary}" >${group.label}</span>
-		  			<span class="group-btns">
-		  				<t:eventlink t:event="createElement" class="icon-plus" 
-		  					context="[group.id]" t:zone="^" >
-		  					</t:eventlink>
-		  			</span>
+		  			<div class="group-item" title="${group.summary}" >
+		  				${group.label}
+		  				<span class="group-btns">
+							<t:eventlink   t:event="editGroup" t:zone="^" 
+								context="[group.id]" title="edit" 
+								class="icon-pencil"></t:eventlink>
+							<t:eventlink   t:event="cancelGroup" t:zone="^" 
+								context="[group.id]" title="delete" 
+								class="icon-trash"></t:eventlink>
+		  				</span>  			
+		  			</div>
 		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
 						<div t:type="Loop" t:source="group.elements" t:value="element">
 							<t:zone  t:id="elementZone" id="${elementzoneid}">
 								<t:if test="${!elementDeleted(element.id)}">
-									<div class="element-item" style="${colorForSelectedElement}">
+									<div class="element-item">
 										<t:eventlink t:event="displaySummary"
 											context="[element.id,group.id]" t:zone="^">
 											${element.label}</t:eventlink>
@@ -28,7 +33,7 @@
 												context="[element.id,group.id]" title="edit" 
 												class="icon-pencil"></t:eventlink>
 											<t:eventlink   t:event="cancelElement" t:zone="^" 
-												context="[element.id,group.id,elementzoneid]" title="delete" 
+												context="[element.id,group.id]" title="delete" 
 												class="icon-trash"></t:eventlink>
 										</span>
 										<t:if test="${displaySummary(element.id)}">
@@ -36,11 +41,19 @@
 											<p:else>
 				            				</p:else>
 				            			</t:if>   
-      									</div>     		
+      								</div>     		
 									</t:if>
 							</t:zone>	
 						</div>	
+						<div class="element-new">
+							<t:eventlink t:event="createElement" context="[group.id]" t:zone="^" >
+							+ ${newElementLabel}</t:eventlink>
+						</div>
 					</t:zone>
+	 		</div>
+	 		<div class="group group-item" title="${group.summary}" >
+		 		<t:eventlink t:event="createGroup" t:zone="^" >
+		 		+ ${newGroupLabel}</t:eventlink>
 	 		</div>
 	 	</t:zone> 
 </t:container>
