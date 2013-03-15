@@ -1,0 +1,29 @@
+<t:container 
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
+	xmlns:p="tapestry:parameter">
+	<t:zone t:id="modalZone" id="zone_${clientId}">
+			<div id="modal_${clientId }" tabindex="-1"
+				role="dialog" aria-labelledby="label_${clientId }" style="display: ${display};" 
+				aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
+					<div class="modal-header">
+						<t:eventlink type="button" t:id="cancelCross" event="modalReset"
+							class="close" data-dismiss="modal" t:zone="^" aria-hidden="${ariahidden}">x</t:eventlink>
+						<h3 id="label_${clientId }">${label}</h3>
+					</div>
+					<div class="modal-body">
+						<t:body />
+					</div>
+					<div class="modal-footer">
+						<t:if test="!okBtnHidden">
+							<input t:type="eventlink" t:zone="^" type="submit" t:id="modalOk" class="btn btn-primary" data-dismiss="modal"
+								aria-hidden="${ariahidden}" event="modalOk" >${labelOk}</input>
+						</t:if>
+						<t:if test="!cancelBtnHidden">
+						<input t:type="eventlink" t:zone="^" type="reset" t:id="modalReset" class="btn" data-dismiss="modal"
+							aria-hidden="${ariahidden}" event="modalReset" >${labelCancel}</input>
+						</t:if>
+					</div>
+			</div>
+			<div t:type="eventlink" t:zone="^" type="reset"  event="modalReset"  t:id="backdrop" class="modal-backdrop fade ${fade}" style="display: ${display};"></div>
+		</t:zone>
+</t:container>

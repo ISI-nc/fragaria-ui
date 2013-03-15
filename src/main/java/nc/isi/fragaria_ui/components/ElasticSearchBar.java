@@ -55,6 +55,10 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Persist
 	private String entry;
 	
+	@Property
+	@Persist
+	private EventBus eventBusListener;
+	
 	@Persist
 	private String prevInput;
 		
@@ -102,12 +106,15 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 		if(session==null)
 			session = sessionManager.create();	
 		if(entry==null)
-			entry = heroText; 	
+			entry = heroText; 
+		if(eventBusListener==null){
+			eventBusListener=new EventBus();
+			eventBusListener.register(this);
+		}
 	}
 	
 	@AfterRender
 	public void initializeComponents(){
-		modalbeaneditform.listenTo(this);
 		eventBusRecorder = modalbeaneditform.getEventBusListener();
 	}	
 	

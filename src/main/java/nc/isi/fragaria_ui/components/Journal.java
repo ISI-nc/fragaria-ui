@@ -7,6 +7,7 @@ import static com.mysema.query.collections.MiniApi.from;
 import java.util.LinkedList;
 import java.util.List;
 
+import nc.isi.fragaria_adapter_rewrite.enums.State;
 import nc.isi.fragaria_ui.utils.events.journal.CancelElementEvent;
 import nc.isi.fragaria_ui.utils.events.journal.CancelGroupEvent;
 import nc.isi.fragaria_ui.utils.events.journal.CreateElementEvent;
@@ -62,9 +63,6 @@ public class Journal {
 	@Parameter(required=true)
 	@Property
 	private EventBus eventBusRecorder;
-	
-	@Parameter
-	private List<Object> objectsToListenTo;
 	
 	@Parameter(value="false")
 	@Property
@@ -137,21 +135,38 @@ public class Journal {
     	return "group_"+group.getId();
     }
     
+//    public String getDisplayLabel(String label)
+//    {
+//    	String displayName = "";
+//    	Array<String> array  = label.split("\\s+");
+//    	
+//    	
+//    	if(label.length()>19){
+//    		label = label.substring(0, 19);
+//    		label+="...";
+//    	}
+//    	return label;
+//    }
+    
     @Subscribe public void recordCreateEvent(CreateGroupEvent e){
     	if(!groups.contains(e.getObject()))
     		groups.add(e.getObject());
+    	e.getObject().setState(State.COMMITED);
     	if(request.isXHR())
     		ajaxResponseRenderer.addRender(journalZone);
     }
     
 	public void onCreateGroup(){
+		JournalGroup grp = new JournalGroup();
+		grp.setState(State.NEW);
 		eventBusRecorder.post(
-				new JournalCreateGroupEvent(new JournalGroup()));
+				new JournalCreateGroupEvent(grp));
 	}
 	
     @Subscribe public void recordCancelEvent(CancelGroupEvent e){
-    	if(!groups.contains(e.getObject()))
+    	if(groups.contains(e.getObject()))
     		groups.remove(e.getObject());
+    	e.getObject().setState(State.DELETED);
     	if(request.isXHR())
     		ajaxResponseRenderer.addRender(journalZone);
     }
@@ -176,21 +191,24 @@ public class Journal {
 		setCurrentEltAndGrp(e.getObject(), e.getGroup());
 		if(elementDeletedList.contains(element.getId()))
 				elementDeletedList.remove(element.getId());
-		group.add(element);
+		if(!group.getElements().contains(element))
+			group.add(element);
+		element.setState(State.COMMITED);
 	    if (request.isXHR())
 			ajaxResponseRenderer.addRender(groupZone);
 	}
 	
 	public void onCreateElement(String gpId){;
 		JournalElement elt = new JournalElement();
+		elt.setState(State.NEW);
 		elt.setGroup(getGroupFromGroupsList(gpId));
-		eventBusRecorder.post(new JournalCreateElementEvent(elt));
-			
+		eventBusRecorder.post(new JournalCreateElementEvent(elt));	
 	}
 
 	@Subscribe public void recordCancelEvent(CancelElementEvent e) {
 		setCurrentEltAndGrp(e.getObject(), e.getObject().getGroup());
 		e.getObject().removeFromGroup();
+		e.getObject().setState(State.DELETED);
 		elementDeletedList.add(e.getObject().getId());
 		if (request.isXHR())
 			ajaxResponseRenderer.addRender(elementZone); 
@@ -229,15 +247,15 @@ public class Journal {
 			ajaxResponseRenderer.addRender(elementZone);
 	}
 	
-	public void onDisplaySummary(String gpId) {
-		if(summaryList.contains(gpId))
-			summaryList.remove(gpId);
-		else
-			summaryList.add(gpId);
-		group = getGroupFromGroupsList(gpId);
-		if (request.isXHR())
-			ajaxResponseRenderer.addRender(groupZone);
-	}
+//	public void onDisplaySummary(String gpId) {
+//		if(summaryList.contains(gpId))
+//			summaryList.remove(gpId);
+//		else
+//			summaryList.add(gpId);
+//		group = getGroupFromGroupsList(gpId);
+//		if (request.isXHR())
+//			ajaxResponseRenderer.addRender(groupZone);
+//	}
 	
 
 	public void onDisplayAll() {	

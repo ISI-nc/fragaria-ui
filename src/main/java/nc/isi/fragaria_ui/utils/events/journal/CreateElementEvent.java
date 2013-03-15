@@ -3,7 +3,7 @@ package nc.isi.fragaria_ui.utils.events.journal;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalElement;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
 
-public class CreateElementEvent extends AbstractEvent<JournalElement>{
+public class CreateElementEvent extends AbstractJournalEvent<JournalElement>{
 
 	private final JournalGroup group;
 	

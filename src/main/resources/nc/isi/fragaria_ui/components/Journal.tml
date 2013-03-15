@@ -8,11 +8,14 @@
 <!-- 			</t:eventlink> -->
 <!-- 	</div> -->
 	<t:zone t:id="journalZone" id="journalZone">
-			<div class="group" t:type="Loop" t:source="groups" t:value="group">
+		<div class="row">
+			<div class="group span3" t:type="Loop" t:source="groups" t:value="group">
 		  		<t:if test="group">	
-		  			<div class="group-item" title="${group.summary}" >
-		  				${group.label}
-		  				<span class="group-btns">
+		  			<div class="group-item" title="${group.label}">
+<!-- 		  				<span> -->
+		  					${group.label}
+<!-- 		  				</span> -->
+		  				<span class="pull-right">
 							<t:eventlink   t:event="editGroup" t:zone="^" 
 								context="[group.id]" title="edit" 
 								class="icon-pencil"></t:eventlink>
@@ -29,7 +32,7 @@
 										<t:eventlink t:event="displaySummary"
 											context="[element.id,group.id]" t:zone="^">
 											${element.label}</t:eventlink>
-										<span class="element-btns">
+										<span class="element-btns pull-right">
 											<t:eventlink   t:event="editElement" t:zone="^" 
 												context="[element.id,group.id]" title="edit" 
 												class="icon-pencil"></t:eventlink>
@@ -41,9 +44,9 @@
 											<div class="element-sum">${element.summary}	</div>
 											<p:else>
 				            				</p:else>
-				            			</t:if>   
-      								</div>     		
-									</t:if>
+				            			</t:if> 
+				            		</div>     		
+								</t:if>
 							</t:zone>	
 						</div>	
 						<div class="element-new">
@@ -53,10 +56,13 @@
 					</t:zone>
 				</t:if>
 	 		</div>
-	 		<div class="group group-item" title="${newGroupLabel}" >
-		 		<t:eventlink t:event="createGroup" t:zone="^" >
-		 		+ ${newGroupLabel}</t:eventlink>
+	 		<div class="group span3" title="${newGroupLabel}" >
+	 			<div class="group-item" title="${newGroupLabel}">
+	 				<t:eventlink  t:event="createGroup" t:zone="^" >
+		 			+ ${newGroupLabel}</t:eventlink>
+	 			</div>
 	 		</div>
+	 	</div>
 	 	</t:zone> 
 </t:container>
 
