@@ -2,8 +2,6 @@ package nc.isi.fragaria_ui.utils.journal.classes;
 
 import java.util.UUID;
 
-import nc.isi.fragaria_adapter_rewrite.enums.State;
-
 
 
 public class AbstractJournal {
@@ -15,8 +13,6 @@ public class AbstractJournal {
 	private String summary;
 	
 	private Object wrappedObject;
-	
-	private State state;
 	
 	public AbstractJournal() {
 		super();
@@ -63,13 +59,5 @@ public class AbstractJournal {
 
 	public void setWrappedObject(Object wrappedObject) {
 		this.wrappedObject = wrappedObject;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
 	}
 }

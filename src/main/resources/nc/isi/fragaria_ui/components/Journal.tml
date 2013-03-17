@@ -11,20 +11,24 @@
 		<div class="row">
 			<div class="group span3" t:type="Loop" t:source="groups" t:value="group">
 		  		<t:if test="group">	
+	  				<t:zone t:id="groupZone" id="${groupzoneid}">   
 		  			<div class="group-item" title="${group.label}">
 <!-- 		  				<span> -->
 		  					${group.label}
 <!-- 		  				</span> -->
 		  				<span class="pull-right">
-							<t:eventlink   t:event="editGroup" t:zone="^" 
-								context="[group.id]" title="edit" 
-								class="icon-pencil"></t:eventlink>
-							<t:eventlink   t:event="cancelGroup" t:zone="^" 
-								context="[group.id]" title="delete" 
-								class="icon-trash"></t:eventlink>
+							<t:if test="${btnEditGroupEnable}">
+								<t:eventlink   t:event="editGroup" t:zone="^" 
+									context="[group.id]" title="edit" 
+									class="icon-pencil"></t:eventlink>
+							</t:if>
+							<t:if test="${btnRemoveGroupEnable}">
+								<t:eventlink   t:event="cancelGroup" t:zone="^" 
+									context="[group.id]" title="delete" 
+									class="icon-trash"></t:eventlink>
+							</t:if>
 		  				</span>  			
 		  			</div>
-		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
 						<div t:type="Loop" t:source="group.elements" t:value="element">
 							<t:zone  t:id="elementZone" id="${elementzoneid}">
 								<t:if test="${!elementDeleted(element.id)}">
@@ -33,12 +37,16 @@
 											context="[element.id,group.id]" t:zone="^">
 											${element.label}</t:eventlink>
 										<span class="element-btns pull-right">
-											<t:eventlink   t:event="editElement" t:zone="^" 
-												context="[element.id,group.id]" title="edit" 
-												class="icon-pencil"></t:eventlink>
-											<t:eventlink   t:event="cancelElement" t:zone="^" 
-												context="[element.id,group.id]" title="delete" 
-												class="icon-trash"></t:eventlink>
+											<t:if test="${btnEditElementEnable}">
+												<t:eventlink   t:event="editElement" t:zone="^" 
+													context="[element.id,group.id]" title="edit" 
+													class="icon-pencil"></t:eventlink>
+											</t:if>
+											<t:if test="${btnRemoveElementEnable}">
+												<t:eventlink   t:event="cancelElement" t:zone="^" 
+													context="[element.id,group.id]" title="delete" 
+													class="icon-trash"></t:eventlink>
+											</t:if>
 										</span>
 										<t:if test="${displaySummary(element.id)}">
 											<div class="element-sum">${element.summary}	</div>
@@ -49,19 +57,23 @@
 								</t:if>
 							</t:zone>	
 						</div>	
-						<div class="element-new">
-							<t:eventlink t:event="createElement" context="[group.id]" t:zone="^" >
-							+ ${newElementLabel}</t:eventlink>
-						</div>
+						<t:if test="${btnCreateElementEnable}">
+							<div class="element-new">
+								<t:eventlink t:event="createElement" context="[group.id]" t:zone="^" >
+								+ ${newElementLabel}</t:eventlink>
+							</div>
+						</t:if>
 					</t:zone>
 				</t:if>
 	 		</div>
-	 		<div class="group span3" title="${newGroupLabel}" >
-	 			<div class="group-item" title="${newGroupLabel}">
-	 				<t:eventlink  t:event="createGroup" t:zone="^" >
-		 			+ ${newGroupLabel}</t:eventlink>
-	 			</div>
-	 		</div>
+	 		<t:if test="${btnCreateGroupEnable}">
+		 		<div class="group span3" title="${newGroupLabel}" >
+		 			<div class="group-item" title="${newGroupLabel}">
+		 				<t:eventlink  t:event="createGroup" t:zone="^" >
+			 			+ ${newGroupLabel}</t:eventlink>
+		 			</div>
+		 		</div>
+		 	</t:if>
 	 	</div>
 	 	</t:zone> 
 </t:container>
