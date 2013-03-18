@@ -108,6 +108,7 @@ public class Journal {
 	@Persist
 	private List<String> summaryList;	
 	
+	@Parameter
 	@Property
 	private JournalGroup group;	
 	
