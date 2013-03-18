@@ -21,6 +21,8 @@ import nc.isi.fragaria_ui.utils.journal.classes.JournalElement;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
 
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.Block;
+import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -127,6 +129,30 @@ public class Journal {
 	
 	@InjectComponent
 	private Zone elementZone;
+				
+	@Parameter(name = "elementsFooter", defaultPrefix = BindingConstants.LITERAL)
+	@Property
+	private Block elementsFooter;
+	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block groupheader;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block elementheader;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block elementfooter;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block groupfooter;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block journalfooter;
 	
 	@BeginRender
 	public void initialize() {
@@ -140,6 +166,11 @@ public class Journal {
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
 		}
+	}
+	
+	@AfterRender
+	public void initializeComponents(){
+		System.out.println(elementsFooter);
 	}
 	
 	public EventBus getEventBusListener(){
@@ -324,4 +355,5 @@ public class Journal {
 			  .uniqueResult($(g));
 		return grp;
 	}
+
 }
