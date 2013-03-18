@@ -9,7 +9,7 @@
 <!-- 	</div> -->
 	<t:zone t:id="journalZone" id="journalZone">
 		<div class="row">
-			<div class="group span3" t:type="Loop" t:source="groups" t:value="group">
+			<div class="group" t:type="Loop" t:source="groups" t:value="group">
 		  		<t:if test="group">	
 	  				<t:zone t:id="groupZone" id="${groupzoneid}">   
 		  			<div class="group-item" title="${group.label}">
@@ -67,7 +67,7 @@
 				</t:if>
 	 		</div>
 	 		<t:if test="${btnCreateGroupEnable}">
-		 		<div class="group span3" title="${newGroupLabel}" >
+		 		<div class="group" title="${newGroupLabel}" >
 		 			<div class="group-item" title="${newGroupLabel}">
 		 				<t:eventlink  t:event="createGroup" t:zone="^" >
 			 			+ ${newGroupLabel}</t:eventlink>
