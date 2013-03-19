@@ -9,7 +9,7 @@ import nc.isi.fragaria_adapter_rewrite.dao.SearchQuery;
 import nc.isi.fragaria_adapter_rewrite.dao.Session;
 import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
-import nc.isi.fragaria_ui.utils.modalbeaneditform.events.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.AfterRender;
@@ -54,6 +54,10 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Property
 	@Persist
 	private String entry;
+	
+	@Property
+	@Persist
+	private EventBus eventBusListener;
 	
 	@Persist
 	private String prevInput;
@@ -102,12 +106,15 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 		if(session==null)
 			session = sessionManager.create();	
 		if(entry==null)
-			entry = heroText; 	
+			entry = heroText; 
+		if(eventBusListener==null){
+			eventBusListener=new EventBus();
+			eventBusListener.register(this);
+		}
 	}
 	
 	@AfterRender
 	public void initializeComponents(){
-		modalbeaneditform.listenTo(this);
 		eventBusRecorder = modalbeaneditform.getEventBusListener();
 	}	
 	

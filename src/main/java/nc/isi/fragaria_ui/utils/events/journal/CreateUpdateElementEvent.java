@@ -1,13 +1,13 @@
-package nc.isi.fragaria_ui.utils.journal.events;
+package nc.isi.fragaria_ui.utils.events.journal;
 
 import nc.isi.fragaria_ui.utils.journal.classes.JournalElement;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
 
-public class CreateEvent extends AbstractEvent{
+public class CreateUpdateElementEvent extends AbstractJournalEvent<JournalElement>{
 
 	private final JournalGroup group;
 	
-	public CreateEvent(JournalElement elt,JournalGroup group) {
+	public CreateUpdateElementEvent(JournalElement elt,JournalGroup group) {
 		super(elt);
 		this.group = group;
 	}

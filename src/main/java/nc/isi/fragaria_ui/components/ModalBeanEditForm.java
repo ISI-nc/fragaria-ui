@@ -1,6 +1,5 @@
 package nc.isi.fragaria_ui.components;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -8,7 +7,8 @@ import javax.inject.Inject;
 
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_ui.services.BeanModelBuilder;
-import nc.isi.fragaria_ui.utils.modalbeaneditform.events.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.modalbeaneditform.SuccessEvent;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.ClientElement;
@@ -30,7 +30,6 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -79,6 +78,10 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	@Parameter
 	private List<Object> objectsToListenTo;
+	
+	@Parameter(required=true)
+	@Property
+	private EventBus eventBusRecorder;
 	
 	@Persist
 	private EventBus eventBusListener;
@@ -138,8 +141,6 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
 		}			
-		if(objectsToListenTo!=null)
-			listenTo(objectsToListenTo);
 		if(ariaHidden==null)
 			ariaHidden = "true";
 		if(fade==null)
@@ -164,44 +165,28 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	
 	@Subscribe public void recordDisplayEvent(DisplayEvent<T> e) {
-		System.out.println("Event raised");
 		object = e.getObject();
 		ariaHidden = "false";
 	    display = "block";
-		fade = "in";
+	    fade = "in";
 		editable = e.getEditable();
-		
+	    if(request.isXHR())
+	    	 ajaxResponseRenderer.addRender(modalZone);
 	}
 	
 	public void onModalReset(){
 		ariaHidden = "";
-	     display = "none";
-	     fade = "";
-	     editable = false;
-	     if(request.isXHR())
+	    display = "none";
+	    fade = "";
+	    editable = false;
+	    if(request.isXHR())
 	    	 ajaxResponseRenderer.addRender(modalZone);
 	}
 	
 	void onSuccess(){	
 		object.getSession().post();
-	     if(request.isXHR())
-	    	 ajaxResponseRenderer.addRender(modalZone);
-	}
-	
-	public void listenTo(Collection<Object> objects) {
-		for(Object object : objects)
-			listenTo(object);
-	}
-
-	public void listenTo(Object...objects){
-		if(objectsToListenTo == null)
-			objectsToListenTo = Lists.newArrayList();
-		for (Object object : objects){
-			if(!objectsToListenTo.contains(object)){
-				objectsToListenTo.add(object);
-				eventBusListener.register(object);
-			}
-		}
+		eventBusRecorder.post(new SuccessEvent<T>(object));
+	    onModalReset();
 	}
 	
 	public EventBus getEventBusListener(){

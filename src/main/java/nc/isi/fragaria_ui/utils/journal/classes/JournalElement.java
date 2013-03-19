@@ -4,7 +4,6 @@ package nc.isi.fragaria_ui.utils.journal.classes;
 public class JournalElement extends AbstractJournal{
 
 	private JournalGroup group;
-	private Object wrappedObject;
 	
 	public JournalElement() {
 		super();
@@ -18,15 +17,6 @@ public class JournalElement extends AbstractJournal{
 	public JournalElement(String id, String label,String summary, JournalGroup group) {
 		super(id, label, summary);
 		this.group = group;
-	}
-	
-	public Object getWrappedObject() {
-		return wrappedObject;
-	}
-
-
-	public void setWrappedObject(Object wrappedObject) {
-		this.wrappedObject = wrappedObject;
 	}
 
 	public JournalGroup getGroup() {

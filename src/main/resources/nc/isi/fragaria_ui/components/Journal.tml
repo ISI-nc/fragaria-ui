@@ -1,49 +1,87 @@
 <t:container 
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
-<section class="well">
-	<span class="display-btns btn-group">
-			<t:eventlink t:event="displayall" class="icon-plus" t:zone="journalZone">
-			</t:eventlink>
-			<t:eventlink t:event="hideall" class="icon-minus" t:zone="journalZone">
-			</t:eventlink>
-	</span>
+<!-- 	<div class="display-btns btn-group"> -->
+<!-- 			<t:eventlink t:event="displayall" class="icon-resize-full" t:zone="journalZone"> -->
+<!-- 			</t:eventlink> -->
+<!-- 			<t:eventlink t:event="hideall" class="icon-resize-small" t:zone="journalZone"> -->
+<!-- 			</t:eventlink> -->
+<!-- 	</div> -->
+
+
+<!-- 	debut -->
+<!-- 		<t:block t:id="journalHeader"></t:block> -->
+<!-- 	fin -->
+
+
 	<t:zone t:id="journalZone" id="journalZone">
-		<table class="journal">
-			<tr>
-				<td t:type="Loop" t:source="groups" t:value="group">
-			  		<span class="group-lbl" title="${group.summary}" >${group.label}</span>
-		  			<t:zone t:id="groupZone" id="${groupzoneid}">   
+		<div class="row">
+			<div class="group" t:type="Loop" t:source="groups" t:value="group">
+		  		<t:if test="group">	
+	  				<t:zone t:id="groupZone" id="${groupzoneid}">   
+		  			<div class="group-item" title="${group.label}">
+		  				${group.label}
+		  				<span class="pull-right">
+							<t:if test="${btnEditGroupEnable}">
+								<t:eventlink   t:event="editGroup" t:zone="^" 
+									context="[group.id]" title="edit" 
+									class="icon-pencil"></t:eventlink>
+							</t:if>
+							<t:if test="${btnRemoveGroupEnable}">
+								<t:eventlink   t:event="cancelGroup" t:zone="^" 
+									context="[group.id]" title="delete" 
+									class="icon-trash"></t:eventlink>
+							</t:if>
+		  				</span>  			
+		  			</div>
 						<div t:type="Loop" t:source="group.elements" t:value="element">
-							<t:zone class="element-item" t:id="elementZone" id="${elementzoneid}">
-								<div style="${colorForSelectedElement}">
-									<t:if test="${!elementDeleted(element.id)}">	
+							<t:zone  t:id="elementZone" id="${elementzoneid}">
+								<t:if test="${!elementDeleted(element.id)}">
+									<div class="element-item">
 										<t:eventlink t:event="displaySummary"
 											context="[element.id,group.id]" t:zone="^">
 											${element.label}</t:eventlink>
-										<span class="element-btns">
-											<t:eventlink   t:event="editElement" t:zone="^" 
-												context="[element.id,group.id]" title="edit" 
-												class="icon-pencil"></t:eventlink>
-											<t:eventlink   t:event="cancelElement" t:zone="^" 
-												context="[element.id,group.id,elementzoneid]" title="delete" 
-												class="icon-trash"></t:eventlink>
+										<span class="element-btns pull-right">
+											<t:if test="${btnEditElementEnable}">
+												<t:eventlink   t:event="editElement" t:zone="^" 
+													context="[element.id,group.id]" title="edit" 
+													class="icon-pencil"></t:eventlink>
+											</t:if>
+											<t:if test="${btnRemoveElementEnable}">
+												<t:eventlink   t:event="cancelElement" t:zone="^" 
+													context="[element.id,group.id]" title="delete" 
+													class="icon-trash"></t:eventlink>
+											</t:if>
 										</span>
 										<t:if test="${displaySummary(element.id)}">
 											<div class="element-sum">${element.summary}	</div>
 											<p:else>
 				            				</p:else>
-				            			</t:if>        		
-									</t:if>
-								</div>
+				            			</t:if> 
+				            		</div>     		
+								</t:if>
 							</t:zone>	
 						</div>	
+						<t:if test="${btnCreateElementEnable}">
+							<div class="element-new">
+								<t:eventlink t:event="createElement" context="[group.id]" t:zone="^" >
+								+ ${newElementLabel}</t:eventlink>
+							</div>
+						</t:if>
+						<t:delegate class="element-new" to="elementsFooter"/>
 					</t:zone>
-				</td>
-			</tr>	
-	 	</table>
-	 </t:zone> 
-	</section>
+				</t:if>
+	 		</div>
+	 		<t:if test="${btnCreateGroupEnable}">
+		 		<div class="group" title="${newGroupLabel}" >
+		 			<div class="group-item" title="${newGroupLabel}">
+		 				<t:eventlink  t:event="createGroup" t:zone="^" >
+			 			+ ${newGroupLabel}</t:eventlink>
+		 			</div>
+		 		</div>
+		 	</t:if>
+	 	</div>
+	 	</t:zone> 
 </t:container>
 
 

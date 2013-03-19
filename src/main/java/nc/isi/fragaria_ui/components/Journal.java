@@ -4,18 +4,25 @@ import static com.mysema.query.alias.Alias.$;
 import static com.mysema.query.alias.Alias.alias;
 import static com.mysema.query.collections.MiniApi.from;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import nc.isi.fragaria_ui.utils.events.journal.CancelElementEvent;
+import nc.isi.fragaria_ui.utils.events.journal.CancelGroupEvent;
+import nc.isi.fragaria_ui.utils.events.journal.CreateUpdateElementEvent;
+import nc.isi.fragaria_ui.utils.events.journal.CreateUpdateGroupEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalCreateElementEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalCreateGroupEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalDeleteElementEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalDeleteGroupEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalEditElementEvent;
+import nc.isi.fragaria_ui.utils.events.journal.JournalEditGroupEvent;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalElement;
 import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
-import nc.isi.fragaria_ui.utils.journal.events.CancelEvent;
-import nc.isi.fragaria_ui.utils.journal.events.CreateEvent;
-import nc.isi.fragaria_ui.utils.journal.events.EditEvent;
-import nc.isi.fragaria_ui.utils.journal.events.JournalDeleteEvent;
-import nc.isi.fragaria_ui.utils.journal.events.JournalEditEvent;
 
+import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.Block;
+import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -56,9 +63,42 @@ public class Journal {
 	@Property
 	private EventBus eventBusRecorder;
 	
-	@Parameter
-	private List<Object> objectsToListenTo;
+	@Parameter(value="false")
+	@Property
+	private Boolean vertical;
 	
+	@Parameter(value="New Group",defaultPrefix = BindingConstants.LITERAL)
+	@Property
+	private String newGroupLabel;
+	
+	@Parameter(value="New Element",defaultPrefix = BindingConstants.LITERAL)
+	@Property
+	private String newElementLabel;
+		
+	@Parameter(value="true")
+	@Property
+	private Boolean btnCreateGroupEnable;
+	
+	@Parameter(value="true")
+	@Property
+	private Boolean btnEditGroupEnable;
+	
+	@Parameter(value="true")
+	@Property
+	private Boolean btnRemoveGroupEnable;
+
+	@Parameter(value="true")
+	@Property
+	private Boolean btnCreateElementEnable;
+	
+	@Parameter(value="true")
+	@Property
+	private Boolean btnEditElementEnable;
+	
+	@Parameter(value="true")
+	@Property
+	private Boolean btnRemoveElementEnable;
+
 	@Persist
 	private EventBus eventBusListener;
 
@@ -68,6 +108,7 @@ public class Journal {
 	@Persist
 	private List<String> summaryList;	
 	
+	@Parameter
 	@Property
 	private JournalGroup group;	
 	
@@ -89,20 +130,35 @@ public class Journal {
 	
 	@InjectComponent
 	private Zone elementZone;
-	
-	@Persist
+				
+	@Parameter(name = "elementsFooter", defaultPrefix = BindingConstants.LITERAL)
 	@Property
-	private String elementEditedId;
+	private Block elementsFooter;
 	
-	public String getColorForSelectedElement(){
-		if(element.getId().equals(elementEditedId)){
-			return "background-color:white;";
-		}
-		return "";
-	}
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block groupheader;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block elementheader;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block elementfooter;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block groupfooter;
+//	
+//	@Property
+//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
+//	private Block journalfooter;
 	
 	@BeginRender
 	public void initialize() {
+		if(groups==null)
+			groups = Lists.newLinkedList();
 		if(summaryList==null)
 			summaryList = Lists.newArrayList();
 		if(elementDeletedList==null)
@@ -110,25 +166,12 @@ public class Journal {
 		if(eventBusListener==null){
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
-		}			
-		if(objectsToListenTo!=null)
-			listenTo(objectsToListenTo);
+		}
 	}
 	
-	public void listenTo(Collection<Object> objects) {
-		for(Object object : objects)
-			listenTo(object);
-	}
-
-	public void listenTo(Object...objects){
-		if(objectsToListenTo == null)
-			objectsToListenTo = Lists.newArrayList();
-		for (Object object : objects){
-			if(!objectsToListenTo.contains(object)){
-				objectsToListenTo.add(object);
-				eventBusListener.register(object);
-			}
-		}
+	@AfterRender
+	public void initializeComponents(){
+		System.out.println(elementsFooter);
 	}
 	
 	public EventBus getEventBusListener(){
@@ -145,58 +188,96 @@ public class Journal {
     	return "group_"+group.getId();
     }
     
-	@Subscribe public void recordCreateEvent(CreateEvent e) {
-		System.out.println("recordCreateEvent from journal");
-	    createElement(e.getElt(),e.getGroup());
-	 }
+//    public String getDisplayLabel(String label)
+//    {
+//    	String displayName = "";
+//    	Array<String> array  = label.split("\\s+");
+//    	
+//    	
+//    	if(label.length()>19){
+//    		label = label.substring(0, 19);
+//    		label+="...";
+//    	}
+//    	return label;
+//    }
+    
+    @Subscribe public void record(CreateUpdateGroupEvent e){
+    	if(!groups.contains(e.getObject())){
+    		groups.add(e.getObject());
+        	if(request.isXHR())
+        		ajaxResponseRenderer.addRender(journalZone);	
+    	}else{
+	    	group = e.getObject();
+	    	if(request.isXHR())
+	    		ajaxResponseRenderer.addRender(groupZone);
+    	}
+    }
+    
+	public void onCreateGroup(){
+		JournalGroup grp = new JournalGroup();
+		eventBusRecorder.post(
+				new JournalCreateGroupEvent(grp));
+	}
 	
-	private void createElement(JournalElement elt,JournalGroup grp) {
-		group = getGroupFromGroupsList(grp.getId());
-		if(elementDeletedList.contains(elt.getId()))
-				elementDeletedList.remove(elt.getId());
-		group.add(elt);
-		element = elt;
-		elementEditedId = element.getId();
-		if (request.isXHR())
-			ajaxResponseRenderer.addRender(journalZone);
+	
+	public void onEditGroup(String gpId){
+	eventBusRecorder.post(
+			new JournalEditGroupEvent(getGroupFromGroupsList(gpId)));
+	}
+	
+    @Subscribe public void record(CancelGroupEvent e){
+    	if(groups.contains(e.getObject()))
+    		groups.remove(e.getObject());
+    	if(request.isXHR())
+    		ajaxResponseRenderer.addRender(journalZone);
+    }
+	
+	public void onCancelGroup(String gpId){
+		eventBusRecorder.post(
+				new JournalDeleteGroupEvent(getGroupFromGroupsList(gpId)));
 	}
 
-	@Subscribe public void recordCancelEvent(CancelEvent e) {
-	    removeElement(e.getElt());  
+	@Subscribe public void record(CreateUpdateElementEvent e) {
+		setCurrentEltAndGrp(e.getObject(), e.getGroup());
+		if(elementDeletedList.contains(element.getId()))
+				elementDeletedList.remove(element.getId());
+		if(!group.getElements().contains(element)){
+			group.add(element);
+	    	if (request.isXHR())
+	    		ajaxResponseRenderer.addRender(groupZone);
+		}else{
+	    	if (request.isXHR())
+	    		ajaxResponseRenderer.addRender(elementZone);
+		}
+	}
+	
+	public void onCreateElement(String gpId){;
+		JournalElement elt = new JournalElement();
+		elt.setGroup(getGroupFromGroupsList(gpId));
+		eventBusRecorder.post(new JournalCreateElementEvent(elt));	
+	}
+	
+	public void onEditElement(String eltId,String gpId) {
+		eventBusRecorder.post(
+				new JournalEditElementEvent(
+						getElementFromGroup(eltId, getGroupFromGroupsList(gpId))));
+	}
+
+	@Subscribe public void record(CancelElementEvent e) {
+		setCurrentEltAndGrp(e.getObject(), e.getObject().getGroup());
+		e.getObject().removeFromGroup();
+		elementDeletedList.add(e.getObject().getId());
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(elementZone); 
 	}
 	
 	public void onCancelElement(String eltId,String gpId){
-		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
-		removeElement(elt);
-	}
-	
-	private void removeElement(JournalElement elt) {
-		setCurrentEltAndGrp(elt, elt.getGroup());
-		elt.removeFromGroup();
-		elementDeletedList.add(elt.getId());
-		if (request.isXHR())
-			ajaxResponseRenderer.addRender(elementZone);
-		eventBusRecorder.post(new JournalDeleteEvent(elt));
-	}
-	
-	@Subscribe public void recordEditEvent(EditEvent e) {
-		setCurrentEltAndGrp(e.getElt(),e.getElt().getGroup());
-		if (request.isXHR())
-			ajaxResponseRenderer.addRender(elementZone);
-	}
-
-	public void onEditElement(String eltId,String gpId) {
-		JournalElement elt = getElementFromGroup(eltId, getGroupFromGroupsList(gpId));
-		group = elt.getGroup();
-		element = elt;
-		eventBusRecorder.post(new JournalEditEvent(elt));
-		elementEditedId = element.getId();
-		if (request.isXHR())
-			ajaxResponseRenderer.addRender(journalZone);
+		eventBusRecorder.post(
+				new JournalDeleteElementEvent(
+						getElementFromGroup(eltId, getGroupFromGroupsList(gpId))));
 	}
 	
 	public void reset(){
-		elementEditedId = null;
 		if (request.isXHR())
 			ajaxResponseRenderer.addRender(journalZone);
 	}
@@ -210,6 +291,16 @@ public class Journal {
 		if (request.isXHR())
 			ajaxResponseRenderer.addRender(elementZone);
 	}
+	
+//	public void onDisplaySummary(String gpId) {
+//		if(summaryList.contains(gpId))
+//			summaryList.remove(gpId);
+//		else
+//			summaryList.add(gpId);
+//		group = getGroupFromGroupsList(gpId);
+//		if (request.isXHR())
+//			ajaxResponseRenderer.addRender(groupZone);
+//	}
 	
 
 	public void onDisplayAll() {	
@@ -235,8 +326,8 @@ public class Journal {
 		return elementDeletedList.contains(eltId);
 	}
 	
-	public Boolean displaySummary(String eltId){
-		return summaryList.contains(eltId);
+	public Boolean displaySummary(String id){
+		return summaryList.contains(id);
 	}
 	
 	private void setCurrentEltAndGrp(String eltId, String gpId) {
@@ -265,4 +356,5 @@ public class Journal {
 			  .uniqueResult($(g));
 		return grp;
 	}
+
 }

@@ -1,19 +1,16 @@
-package nc.isi.fragaria_ui.utils.modalbeaneditform.events;
+package nc.isi.fragaria_ui.utils.events.modalbeaneditform;
 
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
+import nc.isi.fragaria_ui.utils.events.AbstractObjectEvent;
 
 
-public class DisplayEvent<T extends AbstractEntity> {
-	private final T object;
-	private final Boolean editable;
-
-	public DisplayEvent(T object,Boolean editable) {
-		this.object = object;
-		this.editable = editable;
-	}
+public class DisplayEvent<T extends AbstractEntity> extends AbstractObjectEvent<T> {
 	
-	public T getObject() {
-		return object;
+	private final Boolean editable;
+	
+	public DisplayEvent(T object,Boolean editable) {
+		super(object);
+		this.editable = editable;
 	}
 
 	public Boolean getEditable() {
