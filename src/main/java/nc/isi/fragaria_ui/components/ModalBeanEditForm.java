@@ -82,7 +82,7 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	@Parameter
 	private String modelName;
 	
-	@Parameter(required=true)
+	@Parameter
 	@Property
 	private EventBus eventBusRecorder;
 	
