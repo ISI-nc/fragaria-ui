@@ -104,8 +104,9 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	@Property
 	private String display;
 	
+	
+	@Parameter
 	@Property
-	@Persist
 	private Boolean editable;
 	
 
