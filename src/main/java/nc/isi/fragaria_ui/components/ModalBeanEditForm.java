@@ -69,7 +69,7 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	 * name as the component id.
 	 */
 	
-	@Persist
+	@Parameter
 	@Property
 	private T object;
 	
@@ -78,6 +78,9 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	
 	@Parameter
 	private List<Object> objectsToListenTo;
+	
+	@Parameter
+	private String modelName;
 	
 	@Parameter(required=true)
 	@Property
@@ -114,9 +117,9 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 			.build(new CacheLoader<Class<T>, BeanModel<T>>() {
 
 				@Override
-				public BeanModel<T> load(Class<T> key) {
+				public BeanModel<T> load(Class<T> type) {
 					return (BeanModel<T>) beanModelBuilder.
-							createDisplayModel(key, messages,key.toString());
+							createDisplayModel(type, messages,modelName);
 				}
 
 			});
@@ -127,9 +130,9 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 			.build(new CacheLoader<Class<T>, BeanModel<T>>() {
 
 				@Override
-				public BeanModel<T> load(Class<T> key) {
+				public BeanModel<T> load(Class<T> type) {
 					return (BeanModel<T>) beanModelBuilder.
-							createEditModel(key, messages,key.toString());
+							createEditModel(type, messages,modelName);
 				}
 
 			});

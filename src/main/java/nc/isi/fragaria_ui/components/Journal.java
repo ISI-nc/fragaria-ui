@@ -51,7 +51,7 @@ import com.google.common.eventbus.Subscribe;
  *  a JournalElement from its group (which belongs to the list given as a parameter).
  *  
  */
-@Import(module="bootstrap")
+@Import(stylesheet="journal.css",module="bootstrap")
 public class Journal {
 	
 	@Parameter(required=true)
@@ -170,6 +170,8 @@ public class Journal {
     @Subscribe public void record(CreateUpdateGroupEvent e){
     	if(!groups.contains(e.getObject())){
     		groups.add(e.getObject());
+    		System.out.println("le comms");
+    		System.out.println(e.getObject().getElements().get(0).getWrappedObject());
         	if(request.isXHR())
         		ajaxResponseRenderer.addRender(journalZone);	
     	}else{
