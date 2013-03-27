@@ -35,7 +35,7 @@ import com.google.common.eventbus.Subscribe;
 
 @Import(module = "bootstrap",stylesheet="modalBeanEditForm.css")
 public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElement {
-
+	
 	@Inject
 	private Request request;
 
@@ -105,7 +105,7 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	private String display;
 	
 	
-	@Parameter
+	@Parameter(value = "true")
 	@Property
 	private Boolean editable;
 	
@@ -162,10 +162,12 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 	public BeanModel<T> getModel(T object)
 			throws ExecutionException {
 		if(editable)
-			return editModelCache.get((Class<T>)object.getClass());
+			return editModelCache.get((Class<T>) object.getClass());
 		else
 			return displayModelCache.get((Class<T>)object.getClass());
 	}
+	
+	
 	
 	
 	@Subscribe public void recordDisplayEvent(DisplayEvent<T> e) {
@@ -173,24 +175,32 @@ public class ModalBeanEditForm<T extends AbstractEntity> implements ClientElemen
 		ariaHidden = "false";
 	    display = "block";
 	    fade = "in";
-		editable = e.getEditable();
 	    if(request.isXHR())
 	    	 ajaxResponseRenderer.addRender(modalZone);
+	}
+	
+	public void display(){
+		ariaHidden = "false";
+	    display = "block";
+	    fade = "in";
+	}
+	
+	public void hide(){
+		ariaHidden = "";
+	    display = "none";
+	    fade = "";
 	}
 	
 	public void onModalReset(){
 		ariaHidden = "";
 	    display = "none";
 	    fade = "";
-	    editable = false;
 	    if(request.isXHR())
 	    	 ajaxResponseRenderer.addRender(modalZone);
 	}
 	
 	void onSuccess(){	
-		object.getSession().post();
 		eventBusRecorder.post(new SuccessEvent<T>(object));
-	    onModalReset();
 	}
 	
 	public EventBus getEventBusListener(){
