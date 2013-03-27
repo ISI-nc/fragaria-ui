@@ -40,17 +40,24 @@ public class BeanModelBuilderImpl implements BeanModelBuilder {
 	protected <T extends AbstractEntity> void updateBeanModel(Class<T> type,
 			String name, BeanModel<T> beanModel) {
 		if (name != null) {
-			BeanModelDefinition<T> beanModelDefinition = null;
-			Class<?> beanModelClass = type;
-			while(beanModelClass!=null && beanModelDefinition==null){
-				beanModelDefinition = (BeanModelDefinition<T>) beanModelDefinitions
-						.get(beanModelClass.toString());
-				beanModelClass = beanModelClass.getSuperclass();
-			}
+			BeanModelDefinition<T> beanModelDefinition = (BeanModelDefinition<T>) beanModelDefinitions
+					.get(name);
 			if(beanModelDefinition!=null){
 				checkArgument(beanModelDefinition != null,
-						"aucune beanModelDefinition trouvée pour : %s", name);
-				LOGGER.info("beanModelDefinition trouvée pour : "+name+" : "+beanModelDefinition.beanModelKey());
+						"aucune beanModelDefinition trouvée pour : %s", type);
+				LOGGER.info("beanModelDefinition trouvée pour "+type+" : "+beanModelDefinition.name());
+				Class<?> beanModelClass = type;
+				System.out.println("Type "+type);
+				while(beanModelClass!=null && beanModelClass!=beanModelDefinition.beanClass()){
+					beanModelClass = beanModelClass.getSuperclass();
+				System.out.println(beanModelClass);
+				}
+				System.out.println("Sortie "+beanModelClass);
+				System.out.println(beanModelDefinition.beanClass());
+				
+				checkArgument(beanModelClass==beanModelDefinition.beanClass(),
+						"la classe du beanModelDefinition ne correspond pas à la classe où à une une"
+						+ "superclasse de : %s", type);
 				EntityMetadata entityMetadata = new EntityMetadata(type);
 				if (beanModelDefinition.exclude() != null) {
 					beanModel.exclude(beanModelDefinition.exclude());

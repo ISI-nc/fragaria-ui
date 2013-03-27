@@ -22,7 +22,6 @@ import nc.isi.fragaria_ui.utils.journal.classes.JournalGroup;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.Block;
-import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -52,7 +51,7 @@ import com.google.common.eventbus.Subscribe;
  *  a JournalElement from its group (which belongs to the list given as a parameter).
  *  
  */
-@Import(module="bootstrap",stylesheet="journal.css")
+@Import(stylesheet="journal.css",module="bootstrap")
 public class Journal {
 	
 	@Parameter(required=true)
@@ -112,6 +111,7 @@ public class Journal {
 	@Property
 	private JournalGroup group;	
 	
+	@Parameter
 	@Property
 	private JournalElement element;
 	
@@ -135,26 +135,10 @@ public class Journal {
 	@Property
 	private Block elementsFooter;
 	
-//	@Property
-//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-//	private Block groupheader;
-//	
-//	@Property
-//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-//	private Block elementheader;
-//	
-//	@Property
-//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-//	private Block elementfooter;
-//	
-//	@Property
-//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-//	private Block groupfooter;
-//	
-//	@Property
-//	@Parameter(defaultPrefix = BindingConstants.LITERAL)
-//	private Block journalfooter;
-	
+	@Parameter(name = "elementSummary", defaultPrefix = BindingConstants.LITERAL)
+	@Property
+	private Block elementSummary;
+		
 	@BeginRender
 	public void initialize() {
 		if(groups==null)
@@ -167,11 +151,6 @@ public class Journal {
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
 		}
-	}
-	
-	@AfterRender
-	public void initializeComponents(){
-		System.out.println(elementsFooter);
 	}
 	
 	public EventBus getEventBusListener(){
@@ -188,22 +167,11 @@ public class Journal {
     	return "group_"+group.getId();
     }
     
-//    public String getDisplayLabel(String label)
-//    {
-//    	String displayName = "";
-//    	Array<String> array  = label.split("\\s+");
-//    	
-//    	
-//    	if(label.length()>19){
-//    		label = label.substring(0, 19);
-//    		label+="...";
-//    	}
-//    	return label;
-//    }
-    
     @Subscribe public void record(CreateUpdateGroupEvent e){
     	if(!groups.contains(e.getObject())){
     		groups.add(e.getObject());
+    		System.out.println("le comms");
+    		System.out.println(e.getObject().getElements().get(0).getWrappedObject());
         	if(request.isXHR())
         		ajaxResponseRenderer.addRender(journalZone);	
     	}else{
@@ -253,8 +221,8 @@ public class Journal {
 	
 	public void onCreateElement(String gpId){;
 		JournalElement elt = new JournalElement();
-		elt.setGroup(getGroupFromGroupsList(gpId));
-		eventBusRecorder.post(new JournalCreateElementEvent(elt));	
+		eventBusRecorder.post(new JournalCreateElementEvent(
+				elt,getGroupFromGroupsList(gpId)));	
 	}
 	
 	public void onEditElement(String eltId,String gpId) {
@@ -291,17 +259,6 @@ public class Journal {
 		if (request.isXHR())
 			ajaxResponseRenderer.addRender(elementZone);
 	}
-	
-//	public void onDisplaySummary(String gpId) {
-//		if(summaryList.contains(gpId))
-//			summaryList.remove(gpId);
-//		else
-//			summaryList.add(gpId);
-//		group = getGroupFromGroupsList(gpId);
-//		if (request.isXHR())
-//			ajaxResponseRenderer.addRender(groupZone);
-//	}
-	
 
 	public void onDisplayAll() {	
     	for(JournalGroup grp : groups){
@@ -340,7 +297,7 @@ public class Journal {
 		element = elt;
 	}
 	  
-	private JournalElement getElementFromGroup(String eltId, JournalGroup grp) {
+	public JournalElement getElementFromGroup(String eltId, JournalGroup grp) {
 		JournalElement e = alias(JournalElement.class);
 		JournalElement elt = from($(e),grp.getElements())
 			  .where($(e.getId()).eq(eltId))
@@ -349,7 +306,7 @@ public class Journal {
 		return elt;
 	}
 
-	private JournalGroup getGroupFromGroupsList(String gpId) {
+	public JournalGroup getGroupFromGroupsList(String gpId) {
 		JournalGroup g = alias(JournalGroup.class);
 		JournalGroup grp = from($(g),groups)
 			  .where($(g.getId()).eq(gpId))

@@ -35,32 +35,35 @@
 		  				</span>  			
 		  			</div>
 						<div t:type="Loop" t:source="group.elements" t:value="element">
-							<t:zone  t:id="elementZone" id="${elementzoneid}">
-								<t:if test="${!elementDeleted(element.id)}">
-									<div class="element-item">
-										<t:eventlink t:event="displaySummary"
-											context="[element.id,group.id]" t:zone="^">
-											${element.label}</t:eventlink>
-										<span class="element-btns pull-right">
-											<t:if test="${btnEditElementEnable}">
-												<t:eventlink   t:event="editElement" t:zone="^" 
-													context="[element.id,group.id]" title="edit" 
-													class="icon-pencil"></t:eventlink>
-											</t:if>
-											<t:if test="${btnRemoveElementEnable}">
-												<t:eventlink   t:event="cancelElement" t:zone="^" 
-													context="[element.id,group.id]" title="delete" 
-													class="icon-trash"></t:eventlink>
-											</t:if>
-										</span>
-										<t:if test="${displaySummary(element.id)}">
-											<div class="element-sum">${element.summary}	</div>
-											<p:else>
-				            				</p:else>
-				            			</t:if> 
-				            		</div>     		
-								</t:if>
-							</t:zone>	
+							<t:if test="element">
+								<t:zone  t:id="elementZone" id="${elementzoneid}">
+									<t:if test="${!elementDeleted(element.id)}">
+										<div class="element-item">
+											<t:eventlink t:event="displaySummary"
+												context="[element.id,group.id]" t:zone="^">
+												${element.label}</t:eventlink>
+											<span class="element-btns pull-right">
+												<t:if test="${btnEditElementEnable}">
+													<t:eventlink   t:event="editElement" t:zone="^" 
+														context="[element.id,group.id]" title="edit" 
+														class="icon-pencil"></t:eventlink>
+												</t:if>
+												<t:if test="${btnRemoveElementEnable}">
+													<t:eventlink   t:event="cancelElement" t:zone="^" 
+														context="[element.id,group.id]" title="delete" 
+														class="icon-trash"></t:eventlink>
+												</t:if>
+											</span>
+											<t:if test="${displaySummary(element.id)}">
+												<div class="element-sum">${element.summary}	</div>
+												<t:delegate to="elementSummary"/>
+												<p:else>
+					            				</p:else>
+					            			</t:if> 
+					            		</div>     		
+									</t:if>
+								</t:zone>	
+							</t:if>
 						</div>	
 						<t:if test="${btnCreateElementEnable}">
 							<div class="element-new">
