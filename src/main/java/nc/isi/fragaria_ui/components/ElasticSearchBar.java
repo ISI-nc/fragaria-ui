@@ -12,7 +12,6 @@ import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
 
 import org.apache.tapestry5.BindingConstants;
-import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -112,11 +111,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			eventBusListener.register(this);
 		}
 	}
-	
-	@AfterRender
-	public void initializeComponents(){
-		eventBusRecorder = modalbeaneditform.getEventBusListener();
-	}	
 	
 	 String[] onProvideCompletionsFromSearchField(String input)
 	 {	
