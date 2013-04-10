@@ -13,8 +13,13 @@ public class JournalGroup extends AbstractJournal{
 		this.elements = Lists.newLinkedList();
 	}
 	
-	public JournalGroup(String id, String label, String summary,LinkedList<JournalElement> elements) {
-		super(id, label, summary);
+	public JournalGroup(String label, String summary,LinkedList<JournalElement> elements) {
+		super(label, summary);
+		this.elements = elements;
+	}
+	
+	public JournalGroup(String label, String summary,LinkedList<JournalElement> elements,Object wrappedObject) {
+		super(label, summary,wrappedObject);
 		this.elements = elements;
 	}
 	

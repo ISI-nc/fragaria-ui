@@ -47,14 +47,9 @@ public class BeanModelBuilderImpl implements BeanModelBuilder {
 						"aucune beanModelDefinition trouvée pour : %s", type);
 				LOGGER.info("beanModelDefinition trouvée pour "+type+" : "+beanModelDefinition.name());
 				Class<?> beanModelClass = type;
-				System.out.println("Type "+type);
 				while(beanModelClass!=null && beanModelClass!=beanModelDefinition.beanClass()){
 					beanModelClass = beanModelClass.getSuperclass();
-				System.out.println(beanModelClass);
-				}
-				System.out.println("Sortie "+beanModelClass);
-				System.out.println(beanModelDefinition.beanClass());
-				
+				}				
 				checkArgument(beanModelClass==beanModelDefinition.beanClass(),
 						"la classe du beanModelDefinition ne correspond pas à la classe où à une une"
 						+ "superclasse de : %s", type);

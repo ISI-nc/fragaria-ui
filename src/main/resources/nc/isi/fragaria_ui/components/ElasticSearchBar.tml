@@ -11,7 +11,4 @@
 		  <t:errors/>     
 		</form>
 	</t:zone>
-	<t:fragaria.modalbeaneditform t:id="modalbeaneditform" id="modalbeaneditform" 
-		eventbusrecorder="eventbuslistener"
-	 label="${entry}"></t:fragaria.modalbeaneditform>
 </t:container>

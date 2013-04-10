@@ -9,7 +9,7 @@ import nc.isi.fragaria_adapter_rewrite.dao.SearchQuery;
 import nc.isi.fragaria_adapter_rewrite.dao.Session;
 import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
-import nc.isi.fragaria_ui.utils.events.modalbeaneditform.DisplayEvent;
+import nc.isi.fragaria_ui.utils.events.AbstractObjectEvent;
 
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.BeginRender;
@@ -54,15 +54,8 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	@Persist
 	private String entry;
 	
-	@Property
-	@Persist
-	private EventBus eventBusListener;
-	
 	@Persist
 	private String prevInput;
-		
-	@Component(id="modalbeaneditform")
-	private ModalBeanEditForm<T> modalbeaneditform;
 	
 	private HashMap<String, T> map = Maps.newHashMap();
 	
@@ -106,10 +99,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			session = sessionManager.create();	
 		if(entry==null)
 			entry = heroText; 
-		if(eventBusListener==null){
-			eventBusListener=new EventBus();
-			eventBusListener.register(this);
-		}
 	}
 	
 	 String[] onProvideCompletionsFromSearchField(String input)
@@ -161,7 +150,7 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	void onSuccess(){
 		 if(map.containsKey(entry)){
 			 T object = map.get(entry);
-			 eventBusRecorder.post(new DisplayEvent<AbstractEntity>(object, true));
+			 eventBusRecorder.post(new AbstractObjectEvent<AbstractEntity>(object));
 			 map.remove(entry);
 			 String dataToDisplay="";
 			 for(String prop : propertiesToDisplay)
@@ -170,7 +159,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 			 entry = dataToDisplay;
 			 if(request.isXHR())
 				 ajaxResponseRenderer
-				 .addRender(modalbeaneditform.getZone())
 				 .addRender(zoneESBar);
 		 } 
 	 }

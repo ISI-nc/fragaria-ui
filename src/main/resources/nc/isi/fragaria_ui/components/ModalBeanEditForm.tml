@@ -4,7 +4,7 @@
 	<t:zone t:id="modalZone" id="zone_${clientId}">
 		<t:if test="object">
 			<div id="modal_${clientId }" tabindex="-1"
-				role="dialog" aria-labelledby="label_${clientId }" style="display: ${display};" 
+				role="dialog" aria-labelledby="label_${clientId }" style="display:${display};" 
 				aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
 				<t:form t:id="infoForm" t:zone="^">
 					<div class="modal-header">

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 
 
-public class AbstractJournal {
+public abstract class AbstractJournal {
 
 	private String id;
 	
@@ -21,11 +21,19 @@ public class AbstractJournal {
 		this.summary = "";
 	}
 	
-	public AbstractJournal(String id, String label, String summary) {
+	public AbstractJournal(String label, String summary) {
 		super();
-		this.id = id;
+		this.id = UUID.randomUUID().toString();
 		this.label = label;
 		this.summary = summary;
+	}
+	
+	public AbstractJournal(String label, String summary,Object wrappedObject) {
+		super();
+		this.id = UUID.randomUUID().toString();
+		this.label = label;
+		this.summary = summary;
+		this.wrappedObject = wrappedObject;
 	}
 
 	public String getId() {

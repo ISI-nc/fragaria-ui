@@ -36,6 +36,7 @@ public class FragariaUIModule {
 	
 	public static void bind(ServiceBinder binder) {
 		binder.bind(BeanModelBuilder.class, BeanModelBuilderImpl.class);
+		binder.bind(BeanModelProvider.class);
 	}
 	
 	/**
