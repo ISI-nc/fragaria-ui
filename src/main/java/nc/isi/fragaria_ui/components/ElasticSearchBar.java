@@ -13,6 +13,7 @@ import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Persist;
@@ -33,6 +34,7 @@ import com.google.common.collect.Maps;
  *
  * @param <T>
  */
+@Import(stylesheet="ElasticSearchBar.css")
 public class ElasticSearchBar<T extends AbstractEntity> {
 	public final static String heroText = "";
 	
@@ -118,7 +120,6 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 		if(propertiesToDisplay==null)
 			propertiesToDisplay = propertiesToSearchOn;
 		if(input.length()>=minChars){
-			if(map.size()==0){
 				Collection<T> results = session.get(new ByViewQuery<T>(type));
 				map.clear();
 				matches.clear();
@@ -131,7 +132,7 @@ public class ElasticSearchBar<T extends AbstractEntity> {
 	
 				matches.addAll(map.keySet());
 				Collections.sort(matches);
-			}
+			
 		}
 		
 //		String[] array = input.split("\\s+");
