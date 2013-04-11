@@ -9,8 +9,12 @@ public class JournalElement extends AbstractJournal{
 		super();
 	}
 	
-	public JournalElement(String id, String label, String summary) {
-		super(id, label, summary);
+	public JournalElement( String label, String summary) {
+		super( label, summary);
+	}
+	
+	public JournalElement(String label, String summary,Object wrappedObject) {
+		super(label, summary,wrappedObject);
 	}
 
 	

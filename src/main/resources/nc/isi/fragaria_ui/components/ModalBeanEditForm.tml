@@ -2,8 +2,9 @@
 	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
 	xmlns:p="tapestry:parameter">
 	<t:zone t:id="modalZone" id="zone_${clientId}">
+		<t:if test="object">
 			<div id="modal_${clientId }" tabindex="-1"
-				role="dialog" aria-labelledby="label_${clientId }" style="display: ${display};" 
+				role="dialog" aria-labelledby="label_${clientId }" style="display:${display};" 
 				aria-hidden="${ariahidden}" class="modal hide fade ${fade}">
 				<t:form t:id="infoForm" t:zone="^">
 					<div class="modal-header">
@@ -13,10 +14,8 @@
 					</div>
 					<div class="modal-body">
 						<t:errors />
-						<t:if test="object">
-							<t:beaneditor t:id="beaneditor" object="object"  id="beaneditor_${clientId}" model="getModel(object)">
+							<t:beaneditor t:id="beaneditor" object="object" model="getModel(object)">
 							</t:beaneditor>
-						</t:if>
 					</div>
 					<div class="modal-footer">
 						<t:submit t:id="submit" class="btn btn-primary"
@@ -27,5 +26,6 @@
 				</t:form>
 			</div>
 			<div t:type="eventlink" t:zone="^" type="reset"  event="modalReset"  t:id="backdrop" class="modal-backdrop fade ${fade}" style="display: ${display};"></div>
-		</t:zone>
+		</t:if>
+	</t:zone>
 </t:container>

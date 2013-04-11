@@ -25,7 +25,7 @@ public class PropertyEditBlocks {
 	private DateField dateTimeField;
 
 	public DateFormat getDateInputFormat() {
-		return new SimpleDateFormat("dd/MMMM/yyyy");
+		return new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 	}
 
 	public FieldTranslator<?> getDateTimeTranslator() {

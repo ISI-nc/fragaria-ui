@@ -2,7 +2,7 @@
   xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
   xmlns:p="tapestry:parameter"> 
 	<t:zone t:id="zoneESBar" id="zone_${clientid}">
-		<form t:id="form" class = "form-search" id="form_{clientid}" t:type="form" t:zone="^">
+		<form style="margin-top:.5em;margin-bottom: 0em;" t:id="form" class = "form-search" id="form_{clientid}" t:type="form" t:zone="^">
 			<div class="input-append">
 			 	<input t:type="TextField" class="span2 search-query input-small" t:id="searchField" 
 			 		value="entry" minChars="${minChars}" t:mixins="Autocomplete"/>                
@@ -11,7 +11,4 @@
 		  <t:errors/>     
 		</form>
 	</t:zone>
-	<t:fragaria.modalbeaneditform t:id="modalbeaneditform" id="modalbeaneditform" 
-		eventbusrecorder="eventbuslistener"
-	 label="${entry}"></t:fragaria.modalbeaneditform>
 </t:container>

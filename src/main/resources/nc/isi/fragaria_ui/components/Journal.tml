@@ -15,12 +15,17 @@
 
 
 	<t:zone t:id="journalZone" id="journalZone">
-		<div class="row">
-			<div class="group" t:type="Loop" t:source="groups" t:value="group">
+		<div class="journal row-fluid">
+			<div class="group ${span}" t:type="Loop" t:source="groups" t:value="group">
 		  		<t:if test="group">	
 	  				<t:zone t:id="groupZone" id="${groupzoneid}">   
 		  			<div class="group-item" title="${group.label}">
-		  				${group.label}
+		  				<t:eventlink 
+		  					t:event="displayElements"
+							context="[group.id]" 
+							t:zone="^">
+		  				${groupDisplayLabel}
+		  				</t:eventlink>
 		  				<span class="pull-right">
 							<t:if test="${btnEditGroupEnable}">
 								<t:eventlink   t:event="editGroup" t:zone="^" 
@@ -34,37 +39,39 @@
 							</t:if>
 		  				</span>  			
 		  			</div>
-						<div t:type="Loop" t:source="group.elements" t:value="element">
-							<t:if test="element">
-								<t:zone  t:id="elementZone" id="${elementzoneid}">
-									<t:if test="${!elementDeleted(element.id)}">
-										<div class="element-item">
-											<t:eventlink t:event="displaySummary"
-												context="[element.id,group.id]" t:zone="^">
-												${element.label}</t:eventlink>
-											<span class="element-btns pull-right">
-												<t:if test="${btnEditElementEnable}">
-													<t:eventlink   t:event="editElement" t:zone="^" 
-														context="[element.id,group.id]" title="edit" 
-														class="icon-pencil"></t:eventlink>
-												</t:if>
-												<t:if test="${btnRemoveElementEnable}">
-													<t:eventlink   t:event="cancelElement" t:zone="^" 
-														context="[element.id,group.id]" title="delete" 
-														class="icon-trash"></t:eventlink>
-												</t:if>
-											</span>
-											<t:if test="${displaySummary(element.id)}">
-												<div class="element-sum">${element.summary}	</div>
-												<t:delegate to="elementSummary"/>
-												<p:else>
-					            				</p:else>
-					            			</t:if> 
-					            		</div>     		
-									</t:if>
-								</t:zone>	
-							</t:if>
-						</div>	
+		  				<t:if test="${displayElements(group.id)}">
+							<div t:type="Loop" t:source="group.elements" t:value="element">
+								<t:if test="element">
+									<t:zone  t:id="elementZone" id="${elementzoneid}">
+										<t:if test="${!elementDeleted(element.id)}">
+											<div class="element-item">
+												<t:eventlink t:event="displaySummary"
+													context="[element.id,group.id]" t:zone="^">
+													${elementDisplayLabel}</t:eventlink>
+												<span class="element-btns pull-right">
+													<t:if test="${btnEditElementEnable}">
+														<t:eventlink   t:event="editElement" t:zone="^" 
+															context="[element.id,group.id]" title="edit" 
+															class="icon-pencil"></t:eventlink>
+													</t:if>
+													<t:if test="${btnRemoveElementEnable}">
+														<t:eventlink   t:event="cancelElement" t:zone="^" 
+															context="[element.id,group.id]" title="delete" 
+															class="icon-trash"></t:eventlink>
+													</t:if>
+												</span>
+												<t:if test="${displaySummary(element.id)}">
+													<div class="element-sum">${element.summary}	</div>
+													<t:delegate to="elementSummary"/>
+													<p:else>
+						            				</p:else>
+						            			</t:if> 
+						            		</div>     		
+										</t:if>
+									</t:zone>	
+								</t:if>
+							</div>	
+						</t:if>
 						<t:if test="${btnCreateElementEnable}">
 							<div class="element-new">
 								<t:eventlink t:event="createElement" context="[group.id]" t:zone="^" >
@@ -76,7 +83,7 @@
 				</t:if>
 	 		</div>
 	 		<t:if test="${btnCreateGroupEnable}">
-		 		<div class="group" title="${newGroupLabel}" >
+		 		<div class="group ${span}" title="${newGroupLabel}" >
 		 			<div class="group-item" title="${newGroupLabel}">
 		 				<t:eventlink  t:event="createGroup" t:zone="^" >
 			 			+ ${newGroupLabel}</t:eventlink>

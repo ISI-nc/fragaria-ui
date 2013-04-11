@@ -98,6 +98,24 @@ public class Journal {
 	@Property
 	private Boolean btnRemoveElementEnable;
 
+	@Parameter
+	private int groupLabelCharMax;
+	
+	@Parameter
+	private int elementLabelCharMax;
+	
+	@Parameter
+	private int numberOfGroupByRow;
+	
+	@Parameter
+	@Property
+	private JournalGroup group;	
+	
+	@Parameter
+	@Property
+	private JournalElement element;
+	
+
 	@Persist
 	private EventBus eventBusListener;
 
@@ -107,13 +125,8 @@ public class Journal {
 	@Persist
 	private List<String> summaryList;	
 	
-	@Parameter
-	@Property
-	private JournalGroup group;	
-	
-	@Parameter
-	@Property
-	private JournalElement element;
+	@Persist
+	private List<String> groupList;	
 	
 	@Inject 
 	private AjaxResponseRenderer ajaxResponseRenderer;
@@ -151,6 +164,8 @@ public class Journal {
 			eventBusListener=new EventBus();
 			eventBusListener.register(this);
 		}
+		if(groupList==null)
+			groupList = Lists.newArrayList();
 	}
 	
 	public EventBus getEventBusListener(){
@@ -170,8 +185,6 @@ public class Journal {
     @Subscribe public void record(CreateUpdateGroupEvent e){
     	if(!groups.contains(e.getObject())){
     		groups.add(e.getObject());
-    		System.out.println("le comms");
-    		System.out.println(e.getObject().getElements().get(0).getWrappedObject());
         	if(request.isXHR())
         		ajaxResponseRenderer.addRender(journalZone);	
     	}else{
@@ -279,8 +292,22 @@ public class Journal {
 		}
 	}
 	
+	public void onDisplayElements(String gpId) {
+		if(groupList.contains(gpId))
+			groupList.remove(gpId);
+		else
+			groupList.add(gpId);
+		group = getGroupFromGroupsList(gpId);
+		if (request.isXHR())
+			ajaxResponseRenderer.addRender(groupZone);
+	}
+
 	public Boolean elementDeleted(String eltId){
 		return elementDeletedList.contains(eltId);
+	}
+	
+	public Boolean displayElements(String id){
+		return groupList.contains(id);
 	}
 	
 	public Boolean displaySummary(String id){
@@ -313,5 +340,34 @@ public class Journal {
 			  .uniqueResult($(g));
 		return grp;
 	}
+	
+	public String getSpan(){
+		if(numberOfGroupByRow==0)
+			return "";
+		else
+			return "span"+String.valueOf(12/numberOfGroupByRow);
+	}
+	
+	public String getGroupDisplayLabel(){
+		String label = group.getLabel();
+		if(groupLabelCharMax!=0){
+			if(label !=null && label.length()>=groupLabelCharMax){
+				return label.substring(0, groupLabelCharMax-1)+"...";
+			}
+		}
+		return label;
+	}
+	
+	
+	public String getElementDisplayLabel(){
+		String label = element.getLabel();
+		if(elementLabelCharMax!=0){
+			if(label !=null && label.length()>=elementLabelCharMax){
+				return label.substring(0, elementLabelCharMax-1)+"...";
+			}
+		}
+		return label;
+	}
+	
 
 }
