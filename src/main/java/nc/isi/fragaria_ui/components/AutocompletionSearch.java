@@ -50,6 +50,10 @@ public class AutocompletionSearch<T extends AbstractEntity> {
 	@Property
 	private String txtFieldClass;
 	
+	@Parameter(value="true",defaultPrefix = BindingConstants.LITERAL)
+	@Property
+	private Boolean btnSearch;
+	
 	@Persist
 	@Property
 	private String entry;

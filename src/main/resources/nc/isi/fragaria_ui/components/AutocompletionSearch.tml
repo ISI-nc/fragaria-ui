@@ -6,12 +6,13 @@
 	<t:zone t:id="searchFormZone" id="searchFormZone">
 		<form t:type="form" t:id="searchForm" class="form-search" t:zone="^">
 			<div class="input-append">
-				<input t:type="TextField" class="${txtFieldClass}"
-					t:id="entry" minChars="prop:minChars" t:mixins="Autocomplete"
-					placeholder="${placeholder}" />
-				<button type="submit" class="btn">
-					<i class="icon-search"></i>
-				</button>
+				<input t:type="TextField" class="${txtFieldClass}" t:id="entry"
+					minChars="prop:minChars" t:mixins="Autocomplete" placeholder="${placeholder}" />
+				<t:if test="btnSearch">
+					<button type="submit" class="btn">
+						<i class="icon-search"></i>
+					</button>
+				</t:if>
 			</div>
 			<t:errors />
 		</form>
