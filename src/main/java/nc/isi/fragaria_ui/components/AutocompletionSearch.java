@@ -9,8 +9,8 @@ import java.util.Map;
 import nc.isi.fragaria_adapter_rewrite.dao.Session;
 import nc.isi.fragaria_adapter_rewrite.dao.SessionManager;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
-import nc.isi.fragaria_ui.services.AutocompleteConfig;
-import nc.isi.fragaria_ui.services.AutocompleteConfigProvider;
+import nc.isi.fragaria_ui.services.ElasticsearchConfig;
+import nc.isi.fragaria_ui.services.ElasticsearchConfigProvider;
 import nc.isi.fragaria_ui.utils.events.autocompletionsearch.ObjectSelectedFromAutocompletion;
 
 import org.apache.tapestry5.BindingConstants;
@@ -65,20 +65,20 @@ public class AutocompletionSearch<T extends AbstractEntity> {
 	private Map<String, T> map;
 
 	@Persist
-	private AutocompleteConfig<T> autocompleteConfig;
+	private ElasticsearchConfig<T> autocompleteConfig;
 
 	@Inject
 	private SessionManager sessionManager;
 
 	@Inject
-	private AutocompleteConfigProvider autocompleteConfigProvider;
+	private ElasticsearchConfigProvider autocompleteConfigProvider;
 
 	@Component(id = "searchForm")
 	private Form form;
 
     @InjectComponent
     private Zone searchFormZone;
-	
+    	
 	@BeginRender
 	public void initialize() {
 		if (session == null)
@@ -108,7 +108,7 @@ public class AutocompletionSearch<T extends AbstractEntity> {
 
 	void onValidateFromSearchForm() {
 		if (entry == null || entry.length() < minChars) {
-			form.recordError("Tapez trois caractères pour activer l'autocomplétion.");
+			form.recordError("Tapez "+minChars+" caractères pour activer l'autocomplétion.");
 			return;
 		} else if (map.get(entry) == null) {
 			form.recordError("Le patient \"" + entry + "\" n'existe pas.");

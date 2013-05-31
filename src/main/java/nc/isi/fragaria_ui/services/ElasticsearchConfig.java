@@ -6,8 +6,9 @@ import java.util.Map;
 import nc.isi.fragaria_adapter_rewrite.dao.SearchQuery;
 import nc.isi.fragaria_adapter_rewrite.entities.AbstractEntity;
 
-public interface AutocompleteConfig<T extends AbstractEntity> {
+public interface ElasticsearchConfig<T extends AbstractEntity> {
 	public int getLimit();
+	public int getOffset();
 	public Class<T> getType();
 	public SearchQuery<T> getSearchQuery(String partial);
 	public Map<String,T> getResultsWithLabel(Collection<T> results);
