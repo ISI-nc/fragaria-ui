@@ -30,7 +30,7 @@ import org.apache.tapestry5.services.compatibility.Trait;
 import org.joda.time.DateTime;
 import org.reflections.Reflections;
 
-@SubModule(FragariaDomainModule.class)
+@SubModule({FragariaDomainModule.class})
 public class FragariaUIModule {
 
 	

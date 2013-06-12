@@ -16,7 +16,7 @@
 		<div class="control-group">
 			<t:label for="dateTimeField" />
 			<div class="controls">
-				<t:datefield t:id="dateTimeField" value="context.propertyValue"
+				<t:datefield fwtype="btn btn-inverse" t:id="dateTimeField" value="context.propertyValue"
 					label="prop:context.label" format="prop:dateInputFormat"
 					translate="prop:dateTimeTranslator"
 					validate="prop:dateTimeValidator"
