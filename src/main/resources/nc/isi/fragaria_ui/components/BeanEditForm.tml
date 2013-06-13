@@ -1,18 +1,20 @@
-<t:container
-	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
 	xmlns:p="tapestry:parameter">
 	<t:zone id="${clientId }" t:id="formzone">
-		<form class="${className}" t:zone="${clientId }" t:id="form" validate="object"
-			xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+		<form class="${className}" t:zone="${clientId}" t:id="form"
+				validate="object">
 			<t:errors />
 			<fieldSet>
-				<legend>${legend}</legend>
-				<t:beaneditor t:id="editor" object="object" model="model"
-					overrides="this" />
-				<div class="form-actions btn-toolbar">
+				<t:if test="legend">
+					<legend>${legend}</legend>
+				</t:if>
+				<div id="beanEditor">
+					<t:beaneditor t:id="editor" object="object" model="model"
+						overrides="this" />
+				</div>
+				<div class="modal-footer">
 					<div class="btn-group">
-						<t:submit t:id="submit" class="btn btn-primary"
-							value="message:core-submit-label" />
+						<t:submit t:id="submit" class="btn btn-primary" value="message:core-submit-label" />
 						<t:submit t:id="cancel" mode="cancel" class="btn"
 							value="message:core-cancel-label" />
 					</div>

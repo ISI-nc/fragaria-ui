@@ -28,6 +28,10 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
 public class AutocompletionSearch<T extends AbstractEntity> {
+	
+	@Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
+	private String clientId;
+	
 	@Parameter(value = "3")
 	@Property
 	private int minChars;
@@ -110,9 +114,6 @@ public class AutocompletionSearch<T extends AbstractEntity> {
 		prevEntry = partial;
 		return matches;
 	}
-
-	@Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
-	private String clientId;
 
 	final void setupRender() {
 
