@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-yuicompressor</artifactId>
-			<version>${tapestry-release-version}</version>
+			<version>${tapestry-yuicompressor-release-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
@@ -58,11 +58,11 @@
 			<artifactId>fragaria-adapter-rewrite</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.github.lltyk</groupId> -->
-<!-- 			<artifactId>tapestry5-jquery</artifactId> -->
-<!-- 			<version>${tapestry5-jquery-release-version}</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.github.lltyk</groupId> -->
+		<!-- <artifactId>tapestry5-jquery</artifactId> -->
+		<!-- <version>${tapestry5-jquery-release-version}</version> -->
+		<!-- </dependency> -->
 
 	</dependencies>
 	<build>
@@ -126,7 +126,8 @@
 	</repositories>
 
 	<properties>
-		<tapestry-release-version>5.4-alpha-4</tapestry-release-version>
+		<tapestry-yuicompressor-release-version>5.4-alpha-4</tapestry-yuicompressor-release-version>
+		<tapestry-release-version>5.4-alpha-9</tapestry-release-version>
 		<easymock-release-version>3.0</easymock-release-version>
 		<tapestry5-jquery-release-version>3.2.0</tapestry5-jquery-release-version>
 	</properties>
