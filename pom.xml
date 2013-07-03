@@ -19,15 +19,12 @@
 
 		<!-- This adds automatic compression of JavaScript and CSS when in production 
 			mode. -->
-<<<<<<< HEAD
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-yuicompressor</artifactId>
 			<version>${tapestry-release-version}</version>
 		</dependency>
-=======
 
->>>>>>> branch 'master' of git@github.com:ISI-nc/fragaria-ui
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-upload</artifactId>
@@ -123,11 +120,7 @@
 	</repositories>
 
 	<properties>
-<<<<<<< HEAD
-		<tapestry-release-version>5.4-alpha-4</tapestry-release-version>
-=======
 		<tapestry-release-version>5.4-alpha-8</tapestry-release-version>
->>>>>>> branch 'master' of git@github.com:ISI-nc/fragaria-ui
 		<easymock-release-version>3.0</easymock-release-version>
 		<tapestry5-jquery-release-version>3.2.0</tapestry5-jquery-release-version>
 	</properties>
