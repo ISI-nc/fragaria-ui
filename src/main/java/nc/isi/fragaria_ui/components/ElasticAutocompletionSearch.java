@@ -27,7 +27,7 @@ import org.apache.tapestry5.services.FormSupport;
 import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
-public class AutocompletionSearch<T extends AbstractEntity> {
+public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 	
 	@Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
 	private String clientId;
@@ -129,13 +129,13 @@ public class AutocompletionSearch<T extends AbstractEntity> {
 
 		if (formSupport != null) {
 			String controlName = formSupport.allocateControlName(clientId);
-			ComponentAction<AutocompletionSearch> setup = new Setup(controlName);
+			ComponentAction<ElasticAutocompletionSearch> setup = new Setup(controlName);
 			formSupport.storeAndExecute(this, setup);
 		}
 
 	}
 	
-	private static class Setup implements ComponentAction<AutocompletionSearch> {
+	private static class Setup implements ComponentAction<ElasticAutocompletionSearch> {
         private static final long serialVersionUID = 1L;
 
         private final String controlName;
@@ -144,7 +144,7 @@ public class AutocompletionSearch<T extends AbstractEntity> {
             this.controlName = controlName;
         }
 
-        public void execute(AutocompletionSearch component) {
+        public void execute(ElasticAutocompletionSearch component) {
             component.setup(controlName);
         }
 
@@ -170,10 +170,10 @@ public class AutocompletionSearch<T extends AbstractEntity> {
         }
     }
 
-    private static class ProcessSubmission implements ComponentAction<AutocompletionSearch> {
+    private static class ProcessSubmission implements ComponentAction<ElasticAutocompletionSearch> {
         private static final long serialVersionUID = 1L;
 
-        public void execute(AutocompletionSearch component) {
+        public void execute(ElasticAutocompletionSearch component) {
             component.processSubmission();
         }
 

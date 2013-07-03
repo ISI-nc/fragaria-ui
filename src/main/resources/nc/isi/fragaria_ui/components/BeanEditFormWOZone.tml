@@ -1,0 +1,22 @@
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+	xmlns:p="tapestry:parameter">
+	<form class="${className}" t:id="form" validate="object">
+		<t:errors />
+		<fieldSet>
+			<t:if test="legend">
+				<legend>${legend}</legend>
+			</t:if>
+			<div id="beanEditor">
+				<t:beaneditor t:id="editor" object="object" model="model"
+					overrides="this" />
+			</div>
+			<div class="modal-footer">
+				<div class="btn-group">
+					<t:submit t:id="submit" class="btn btn-primary" value="message:core-submit-label" />
+					<t:submit t:id="cancel" mode="cancel" class="btn"
+						value="message:core-cancel-label" />
+				</div>
+			</div>
+		</fieldSet>
+	</form>
+</t:container>
