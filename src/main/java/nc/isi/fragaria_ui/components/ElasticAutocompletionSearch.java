@@ -28,14 +28,14 @@ import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
 public class ElasticAutocompletionSearch<T extends AbstractEntity> {
-	
+
 	@Parameter(value = "prop:componentResources.id", defaultPrefix = BindingConstants.LITERAL)
 	private String clientId;
-	
+
 	@Parameter(value = "3")
 	@Property
 	private int minChars;
-	
+
 	@Parameter(required = true, defaultPrefix = BindingConstants.LITERAL, allowNull = false)
 	private String key;
 
@@ -72,7 +72,7 @@ public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 	private ElasticsearchConfig<T> autocompleteConfig;
 
 	private String controlName;
-	
+
 	@Inject
 	private SessionManager sessionManager;
 
@@ -85,16 +85,17 @@ public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 	@Environmental
 	private ValidationTracker tracker;
 
-    private static final ProcessSubmission PROCESS_SUBMISSION = new ProcessSubmission();
-	
+	private static final ProcessSubmission PROCESS_SUBMISSION = new ProcessSubmission();
+
 	@SuppressWarnings("unchecked")
 	@BeginRender
 	public void initialize() {
 		if (session == null)
 			session = sessionManager.create();
 		map = Maps.newHashMap();
-		autocompleteConfig = autocompleteConfigProvider
-				.getAutocompleteConfig(key);
+		if (autocompleteConfig == null)
+			autocompleteConfig = autocompleteConfigProvider
+					.getAutocompleteConfig(key);
 	}
 
 	List<String> onProvideCompletionsFromEntry(String partial) {
@@ -129,60 +130,69 @@ public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 
 		if (formSupport != null) {
 			String controlName = formSupport.allocateControlName(clientId);
-			ComponentAction<ElasticAutocompletionSearch> setup = new Setup(controlName);
+			ComponentAction<ElasticAutocompletionSearch> setup = new Setup(
+					controlName);
 			formSupport.storeAndExecute(this, setup);
 		}
 
 	}
-	
-	private static class Setup implements ComponentAction<ElasticAutocompletionSearch> {
-        private static final long serialVersionUID = 1L;
 
-        private final String controlName;
+	private static class Setup implements
+			ComponentAction<ElasticAutocompletionSearch> {
+		private static final long serialVersionUID = 1L;
 
-        Setup(String controlName) {
-            this.controlName = controlName;
-        }
+		private final String controlName;
 
-        public void execute(ElasticAutocompletionSearch component) {
-            component.setup(controlName);
-        }
+		Setup(String controlName) {
+			this.controlName = controlName;
+		}
 
-        @Override
-        public String toString() {
-            return String.format(this.getClass().getSimpleName() + ".Setup[%s]", controlName);
-        }
-    }
-	
-    private void setup(String controlName) {
-        this.setControlName(controlName);
-    }
-    
-    final void afterRender() {
+		public void execute(ElasticAutocompletionSearch component) {
+			component.setup(controlName);
+		}
 
-        // If we are inside a form, ask FormSupport to store PROCESS_SUBMISSION in its list of actions to do on submit.
-        // If I contain other components, their actions will already be in the list, before PROCESS_SUBMISSION. That is
-        // because this method, afterRender(), is late in the sequence. This guarantees PROCESS_SUBMISSION will be
-        // executed on submit AFTER the components I contain are processed (which includes their validation).
+		@Override
+		public String toString() {
+			return String
+					.format(this.getClass().getSimpleName() + ".Setup[%s]",
+							controlName);
+		}
+	}
 
-        if (formSupport != null) {
-            formSupport.store(this, PROCESS_SUBMISSION);
-        }
-    }
+	private void setup(String controlName) {
+		this.setControlName(controlName);
+	}
 
-    private static class ProcessSubmission implements ComponentAction<ElasticAutocompletionSearch> {
-        private static final long serialVersionUID = 1L;
+	final void afterRender() {
 
-        public void execute(ElasticAutocompletionSearch component) {
-            component.processSubmission();
-        }
+		// If we are inside a form, ask FormSupport to store PROCESS_SUBMISSION
+		// in its list of actions to do on submit.
+		// If I contain other components, their actions will already be in the
+		// list, before PROCESS_SUBMISSION. That is
+		// because this method, afterRender(), is late in the sequence. This
+		// guarantees PROCESS_SUBMISSION will be
+		// executed on submit AFTER the components I contain are processed
+		// (which includes their validation).
 
-        @Override
-        public String toString() {
-            return this.getClass().getSimpleName() + ".ProcessSubmission";
-        }
-    };
-    
+		if (formSupport != null) {
+			formSupport.store(this, PROCESS_SUBMISSION);
+		}
+	}
+
+	private static class ProcessSubmission implements
+			ComponentAction<ElasticAutocompletionSearch> {
+		private static final long serialVersionUID = 1L;
+
+		public void execute(ElasticAutocompletionSearch component) {
+			component.processSubmission();
+		}
+
+		@Override
+		public String toString() {
+			return this.getClass().getSimpleName() + ".ProcessSubmission";
+		}
+	};
+
 	private void processSubmission() {
 
 		// Validate. We ensured in afterRender() that the components I contain
@@ -190,7 +200,7 @@ public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 
 		// Error if the number of persons chosen is less than specified by the
 		// min parameter.
-		
+
 		if (entry == null || entry.length() < minChars) {
 			tracker.recordError("Tapez " + minChars
 					+ " caractères pour activer l'autocomplétion.");
@@ -198,11 +208,11 @@ public class ElasticAutocompletionSearch<T extends AbstractEntity> {
 		} else if (map.get(entry) == null) {
 			tracker.recordError("\"" + entry + "\" n'existe pas.");
 			return;
-		}else{
+		} else {
 			if (busRecorder != null) {
 				busRecorder.post(new ObjectSelectedFromAutocompletion(map
 						.get(entry)));
-			}	
+			}
 		}
 
 	}
