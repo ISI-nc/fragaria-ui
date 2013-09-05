@@ -2,7 +2,7 @@ package nc.isi.fragaria_ui.components;
 
 import static com.mysema.query.alias.Alias.$;
 import static com.mysema.query.alias.Alias.alias;
-import static com.mysema.query.collections.MiniApi.from;
+import static com.mysema.query.collections.CollQueryFactory.from;
 
 import java.util.LinkedList;
 import java.util.List;
