@@ -26,7 +26,6 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<finalName>fragaria-ui</finalName>
